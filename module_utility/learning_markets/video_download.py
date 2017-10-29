@@ -15,6 +15,9 @@ finished_pickle_path = os.path.join("file_config", "learning_markets", "finished
 
 video_download_path = os.path.join("file_download", "learning_markets_video")
 
+net_disk_list = []
+net_disk_pickle_path = os.path.join("file_config", "learning_markets", "learning_markets_net_map.pickle")
+
 def as_num(x):
     y='{:.5f}'.format(x)
     return(y)
@@ -45,6 +48,7 @@ def download_file(url, file_name, ori_name):
 def start_extract_learning_markets(update=True):
     global finished_list
     global total_list
+    global net_disk_list
 
     if os.path.exists(finished_pickle_path):
         f_pickle = open(finished_pickle_path, "rb")
@@ -55,6 +59,11 @@ def start_extract_learning_markets(update=True):
         f_total = open(total_pickle_path, "rb")
         total_list = pickle.load(f_total)
         f_total.close()
+
+    if os.path.exists(net_disk_pickle_path):
+        f_net_disk = open(net_disk_pickle_path, "rb")
+        net_disk_list = pickle.load(f_net_disk)
+        f_net_disk.close()
 
     if update is True:
         driver = webdriver.Firefox()
@@ -114,6 +123,10 @@ def start_extract_learning_markets(update=True):
             for total_dic_index in total_list:
                 file_name = total_list[total_dic_index][0]
                 originan_name = total_list[total_dic_index][1]
+                if file_name in net_disk_list:
+                    print("{} has already existed in net disk".format(file_name))
+                    continue
+
                 if file_name in finished_list and os.path.exists(file_name):
                     print("{} has already exsited".format(originan_name))
                     continue

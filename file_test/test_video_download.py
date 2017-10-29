@@ -124,4 +124,4 @@ def start_extract(update=True):
                     continue
                 download_file(total_dic_index, file_name, originan_name)
 
-start_extract(False)
+start_extract(True)
