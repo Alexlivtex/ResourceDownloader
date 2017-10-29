@@ -123,7 +123,7 @@ def start_extract_learning_markets(update=True):
             for total_dic_index in total_list:
                 file_name = total_list[total_dic_index][0]
                 originan_name = total_list[total_dic_index][1]
-                if file_name in net_disk_list:
+                if file_name.split("/")[-1] in net_disk_list:
                     print("{} has already existed in net disk".format(file_name))
                     continue
 
