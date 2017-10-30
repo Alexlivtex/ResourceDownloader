@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from check_disk_status import check_disk_percentage
+from post_deal_process import post_process
+from pre_check_process import pre_check_net_disk
 import urllib2
 import requests
 import os
@@ -123,6 +126,17 @@ def start_extract_learning_markets(update=True):
             for total_dic_index in total_list:
                 file_name = total_list[total_dic_index][0]
                 originan_name = total_list[total_dic_index][1]
+                percent = check_disk_percentage()
+                if percent > 0.70:
+                    print("No enough disk space left!")
+                    post_process()
+                    pre_check_net_disk()
+
+                    if os.path.exists(net_disk_pickle_path):
+                        f_net_disk = open(net_disk_pickle_path, "rb")
+                        net_disk_list = pickle.load(f_net_disk)
+                        f_net_disk.close()
+
                 if file_name.split("/")[-1] in net_disk_list:
                     print("{} has already existed in net disk".format(file_name))
                     continue
