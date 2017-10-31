@@ -19,7 +19,7 @@ def magnet2torrent(magnet, output_name=None):
     tempdir = tmp_dir_name
     ses = lt.session()
     params = {
-        #'save_path': tempdir,
+        'save_path': tempdir,
         'storage_mode': lt.storage_mode_t(2),
     }
     handle = lt.add_magnet_uri(ses, magnet, params)
@@ -54,7 +54,7 @@ def magnet2torrent(magnet, output_name=None):
     f.write(torrent_content)
     f.close()
     try:
-        shutil.rmtree(torinfo.name())
+        shutil.rmtree(tempdir, torinfo.name())
     except:
         print("No need to delete {}".format(torinfo.name()))
     ses.remove_torrent(handle)
