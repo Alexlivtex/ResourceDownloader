@@ -54,7 +54,7 @@ def magnet2torrent(magnet, output_name=None):
     f.write(torrent_content)
     f.close()
     try:
-        shutil.rmtree(tempdir, torinfo.name())
+        shutil.rmtree(os.path.join(tempdir, torinfo.name()))
     except:
         print("No need to delete {}".format(torinfo.name()))
     ses.remove_torrent(handle)
