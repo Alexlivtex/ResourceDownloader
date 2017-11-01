@@ -12,7 +12,13 @@ import pickle
 tmp_dir_name = os.path.join("file_download", "bt_download", "torrent_dir")
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 
+finished_transform_list = []
+finished_transform_data = os.path.join("file_config", "bt_download", "finished_transform.pickle")
+
+
+
 def magnet2torrent(magnet, output_name=None):
+    global finished_transform_list
     if not pt.exists(tmp_dir_name):
         os.mkdir(tmp_dir_name)
 
@@ -44,7 +50,8 @@ def magnet2torrent(magnet, output_name=None):
     torfile = lt.create_torrent(torinfo)
 
     #output = pt.abspath(torinfo.name() + tempdir + ".torrent")
-    output = torinfo.name() + ".torrent"
+    #output = torinfo.name() + ".torrent"
+    output = magnet.split(":")[-1] + ".torrent"
     output = os.path.join(tempdir, output)
 
     print("Saving torrent file here : " + output + " ...")
@@ -53,6 +60,13 @@ def magnet2torrent(magnet, output_name=None):
     torrent_content = lt.bencode(torfile.generate())
     f.write(torrent_content)
     f.close()
+
+    if magnet not in finished_transform_list:
+        finished_transform_list.append(magnet)
+        f = open(finished_transform_data, "wb")
+        pickle.dump(finished_transform_list, f)
+        f.close()
+
     try:
         shutil.rmtree(os.path.join(tempdir, torinfo.name()))
     except:
@@ -61,15 +75,28 @@ def magnet2torrent(magnet, output_name=None):
     return output
 
 
-total_list = {}
-f_pickle = open(pickle_data, "rb")
-total_list = pickle.load(f_pickle)
-f_pickle.close()
+def torrent_transform():
+    global finished_transform_list
+    total_list = {}
 
-for link_index in total_list:
-    if total_list[link_index][1][:6] == "magnet":
-        print(total_list[link_index][1])
-        magnet2torrent(total_list[link_index][1])
+    if os.path.exists(pickle_data):
+        f_pickle = open(pickle_data, "rb")
+        total_list = pickle.load(f_pickle)
+        f_pickle.close()
+
+    if os.path.exists(finished_transform_data):
+        f = open(finished_transform_data, "rb")
+        finished_transform_list = pickle.load(f)
+        f.close()
+
+    for link_index in total_list:
+        if total_list[link_index][1][:6] == "magnet":
+            if total_list[link_index][1] in finished_transform_list:
+                print("{} has already finished transforming".format(total_list[link_index][1]))
+                continue
+            else:
+                print("Begin to transform {}".format(total_list[link_index][1]))
+                magnet2torrent(total_list[link_index][1])
 
 
-#magnet2torrent("magnet:?xt=urn:btih:de3fd61487d7c0d2b7fe77b2dbb0f05c3b0a8162")
+torrent_transform()
