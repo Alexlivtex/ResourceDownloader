@@ -45,6 +45,7 @@ def magnet2torrent(magnet, output_name=None):
             sys.exit(0)
     ses.pause()
     print("Done")
+    print("Spent {} seconds to finish".format(waiting_count))
 
     torinfo = handle.get_torrent_info()
     torfile = lt.create_torrent(torinfo)
