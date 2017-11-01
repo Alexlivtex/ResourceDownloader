@@ -91,7 +91,7 @@ def torrent_transform():
 
     for link_index in total_list:
         if total_list[link_index][1][:6] == "magnet":
-            if total_list[link_index][1] in finished_transform_list:
+            if total_list[link_index][1] in finished_transform_list and os.path.join(tmp_dir_name, (total_list[link_index][1]).split(":")[-1] + ".torrent"):
                 print("{} has already finished transforming".format(total_list[link_index][1]))
                 continue
             else:
