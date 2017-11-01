@@ -21,23 +21,21 @@ def analysis_website():
     driver.set_script_timeout(10)
     driver.set_page_load_timeout(10)
 
-    while True:
-        driver.get(login_url)
-        soup = bs.BeautifulSoup(driver.page_source, "lxml")
-        title_content = soup.findAll("title")[0].text
-        if title_content == "Attention Required! | Cloudflare":
-            print(title_content)
-            time.sleep(30)
-            continue
-        else:
-            elem_user_name = driver.find_element_by_name("pwuser")
-            elem_user_pasword = driver.find_element_by_name("pwpwd")
-            elem_user_name.send_keys("alexlivtex")
-            elem_user_pasword.send_keys("heisenberg1987")
-            #time.sleep(5)
-            elem_login = driver.find_element_by_name("submit")
-            elem_login.click()
-            break
+    driver.get(login_url)
+    soup = bs.BeautifulSoup(driver.page_source, "lxml")
+    title_content = soup.findAll("title")[0].text
+    if title_content == "Attention Required! | Cloudflare":
+        print(title_content)
+        time.sleep(30)
+        return
+    else:
+        elem_user_name = driver.find_element_by_name("pwuser")
+        elem_user_pasword = driver.find_element_by_name("pwpwd")
+        elem_user_name.send_keys("alexlivtex")
+        elem_user_pasword.send_keys("heisenberg1987")
+        #time.sleep(5)
+        elem_login = driver.find_element_by_name("submit")
+        elem_login.click()
 
     if os.path.exists(pickle_data):
         f_data_pickle = open(pickle_data, "rb")
