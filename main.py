@@ -7,7 +7,7 @@ from module_utility.learning_markets.post_deal_process import post_process
 def main():
     pre_check_net_disk()
     #Download the latest learning markets video
-    start_extract_learning_markets(True)
+    #start_extract_learning_markets(True)
     start_extract_learning_markets(False)
     post_process()
 
