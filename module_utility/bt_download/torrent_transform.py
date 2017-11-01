@@ -9,7 +9,7 @@ import shutil
 import time
 import pickle
 
-tmp_dir_name = os.path.join("file_download", "bt_download", "torrent_dir")
+tmp_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 
 finished_transform_list = []
