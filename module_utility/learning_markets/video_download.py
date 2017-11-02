@@ -123,6 +123,11 @@ def start_extract_learning_markets(update=True):
             f_total = open(total_pickle_path, "rb")
             total_list = pickle.load(f_total)
             f_total.close()
+            for net_disk_index in net_disk_list:
+                if os.path.exists(os.path.join(video_download_path, net_disk_index)):
+                    print("{} has already existed in net disk, so delete it".format(os.path.join(video_download_path, net_disk_index)))
+                    os.remove(os.path.join(video_download_path, net_disk_index))
+
             for total_dic_index in total_list:
                 file_name = total_list[total_dic_index][0]
                 originan_name = total_list[total_dic_index][1]
