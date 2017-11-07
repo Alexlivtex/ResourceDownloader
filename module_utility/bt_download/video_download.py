@@ -39,6 +39,12 @@ def download_torrent(torrent_file):
     print(file_size)
     print(check_max_acceptable_size())
 
+    if file_size > check_max_acceptable_size():
+        print("File is too large, exit!")
+        return
+    else:
+        print("File size is OK, can be downloaded!")
+
     while(not s.is_seeding):
         s = h.status()
         state_str = ['queued', 'checking', 'downloading metadata','downloading', 'finished', 'seeding', 'allocating', 'checking fastresume']
