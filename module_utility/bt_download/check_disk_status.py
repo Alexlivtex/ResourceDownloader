@@ -10,3 +10,4 @@ def check_max_acceptable_size():
     percent = float(percent)
 
     max_file_size = ((1.0 - percent)*MAX_DISK_SPACE*0.7) / 2.0
+    return max_file_size
