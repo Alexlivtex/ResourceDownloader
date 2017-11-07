@@ -57,7 +57,7 @@ def begin_download():
 
     if os.path.exists(finished_downloading_data):
         f = open(finished_downloading_data, "rb")
-        finished_downloading_list = pickle.load(finished_downloading_data)
+        finished_downloading_list = pickle.load(f)
         f.close()
 
     if os.path.exists(failed_downloading_data):
@@ -67,7 +67,7 @@ def begin_download():
 
     if os.path.exists(current_downloading_data):
         f = open(current_downloading_data, "rb")
-        current_downloading = pickle.load(current_downloading_data)
+        current_downloading = pickle.load(f)
         f.close()
         download_torrent(current_downloading)
         os.remove(current_downloading_data)
