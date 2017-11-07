@@ -36,11 +36,8 @@ def download_torrent(torrent_file):
     print 'starting', h.name()
     s = h.status()
     file_size = s.total_wanted
-    if file_size > check_max_acceptable_size():
-        print("The file is too large, exist")
-        return
-    else:
-        print("The file is available")
+    print(file_size)
+    print(check_max_acceptable_size())
 
     while(not s.is_seeding):
         s = h.status()
