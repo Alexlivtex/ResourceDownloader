@@ -3,8 +3,9 @@ import pickle
 import libtorrent as lt
 import time
 import sys
+import shutil
 
-from check_disk_status import check_disk_percentage
+from check_disk_status import check_max_acceptable_size
 
 torrent_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
 bt_download_dir = os.path.join("file_download","bt_download", "download_dir")
@@ -28,17 +29,18 @@ def download_torrent(torrent_file):
 
     print(info)
 
-    params = {'save_path' : bt_download_dir, 'storage_mode': lt.storage_mode_t.storage_mode_sparse, 'ti': info}
+    params = {'save_path' : bt_download_dir, 'storage_mode': lt.storage_mode_t(2), 'ti': info}
     h = ses.add_torrent(params)
     ses.start_dht()
 
     print 'starting', h.name()
-
     s = h.status()
-
-    #print s.total_wanted
-    percent = check_disk_percentage(float(s.total_wanted)/float(1024))
-    print(percent)
+    file_size = s.total_wanted
+    if file_size > check_max_acceptable_size():
+        print("The file is too large, exist")
+        return
+    else:
+        print("The file is available")
 
     while(not s.is_seeding):
         s = h.status()
@@ -57,8 +59,10 @@ def download_torrent(torrent_file):
             failed_download.append(torrent_file)
             pickle.dump(failed_download, f)
             f.close()
+            shutil.rmtree(os.path.join(bt_download_dir, h.name()))
             return
     print h.name(), 'complete'
+
 
 
 
