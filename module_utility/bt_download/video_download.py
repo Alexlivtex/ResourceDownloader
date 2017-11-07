@@ -69,7 +69,7 @@ def begin_download():
         f = open(current_downloading_data, "rb")
         current_downloading = pickle.load(f)
         f.close()
-        download_torrent(current_downloading)
+        download_torrent(os.path.join(torrent_dir_name, current_downloading))
         os.remove(current_downloading_data)
     else:
         for index in os.listdir(torrent_dir_name):
