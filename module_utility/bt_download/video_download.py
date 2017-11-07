@@ -2,6 +2,7 @@ import os
 import pickle
 import libtorrent as lt
 import time
+import sys
 
 torrent_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
 bt_download_dir = os.path.join("file_download","bt_download", "download_dir")
@@ -27,15 +28,17 @@ def download_torrent(torrent_file):
 
     params = {'save_path' : bt_download_dir, 'storage_mode': lt.storage_mode_t.storage_mode_sparse, 'ti': info}
     h = ses.add_torrent(params)
+    ses.start_dht()
 
+    print 'starting', h.name()
     s = h.status()
     while(not s.is_seeding):
         s = h.status()
-        state_str = ['queued', 'checking', 'downloading metadata', \
-                'downloading', 'finished', 'seeding', 'allocating']
-        print('%.2f%% complete (down: %.1f kb/s up: %.1f kB/s peers: %d) %s' % \
-                (s.progress * 100, s.download_rate / 1000, s.upload_rate / 1000, \
-                s.num_peers, state_str[s.state]))
+        state_str = ['queued', 'checking', 'downloading metadata','downloading', 'finished', 'seeding', 'allocating', 'checking fastresume']
+        print '\r%.2f%% complete (down: %.1f kb/s up: %.1f kB/s peers: %d) %s\n' % \
+          (s.progress * 100, s.download_rate / 1000, s.upload_rate / 1000, \
+          s.num_peers, state_str[s.state]),
+        sys.stdout.flush()
 
         time.sleep(1)
         download_time += 1
@@ -47,6 +50,7 @@ def download_torrent(torrent_file):
             pickle.dump(failed_download, f)
             f.close()
             return
+    print h.name(), 'complete'
 
 
 
