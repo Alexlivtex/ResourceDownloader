@@ -4,7 +4,7 @@ import libtorrent as lt
 import time
 import sys
 
-from module_utility.bt_download.check_disk_status import check_disk_percentage
+from check_disk_status import check_disk_percentage
 
 torrent_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
 bt_download_dir = os.path.join("file_download","bt_download", "download_dir")
