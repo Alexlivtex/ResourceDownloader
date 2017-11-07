@@ -31,7 +31,11 @@ def download_torrent(torrent_file):
     ses.start_dht()
 
     print 'starting', h.name()
+
     s = h.status()
+    while (not h.is_seed()):
+        print s.total_wanted
+        
     while(not s.is_seeding):
         s = h.status()
         state_str = ['queued', 'checking', 'downloading metadata','downloading', 'finished', 'seeding', 'allocating', 'checking fastresume']
