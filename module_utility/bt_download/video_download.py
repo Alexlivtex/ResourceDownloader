@@ -4,6 +4,8 @@ import libtorrent as lt
 import time
 import sys
 
+from module_utility.bt_download.check_disk_status import check_disk_percentage
+
 torrent_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
 bt_download_dir = os.path.join("file_download","bt_download", "download_dir")
 
@@ -33,9 +35,11 @@ def download_torrent(torrent_file):
     print 'starting', h.name()
 
     s = h.status()
-    while (not h.is_seed()):
-        print s.total_wanted
-        
+
+    #print s.total_wanted
+    percent = check_disk_percentage(float(s.total_wanted)/float(1024))
+    print(percent)
+
     while(not s.is_seeding):
         s = h.status()
         state_str = ['queued', 'checking', 'downloading metadata','downloading', 'finished', 'seeding', 'allocating', 'checking fastresume']
