@@ -73,6 +73,7 @@ def begin_download():
         os.remove(current_downloading_data)
     else:
         for index in os.listdir(torrent_dir_name):
+            print(index)
             if index.split(".")[-1] is "torrent" and index not in finished_downloading_list and index not in failed_download_list:
                 f = open(current_downloading_data, "wb")
                 pickle.dump(index, f)
