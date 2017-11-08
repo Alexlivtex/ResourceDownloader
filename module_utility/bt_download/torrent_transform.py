@@ -98,7 +98,10 @@ def torrent_transform():
                 continue
             else:
                 print("Begin to transform {}".format(link))
-                magnet2torrent(link)
+                try:
+                    magnet2torrent(link)
+                except:
+                    continue
 
 
 torrent_transform()
