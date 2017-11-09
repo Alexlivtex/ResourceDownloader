@@ -18,8 +18,8 @@ def analysis_website():
     total_err_list = []
     driver = webdriver.Firefox()
     driver.implicitly_wait(20)
-    driver.set_script_timeout(10)
-    driver.set_page_load_timeout(10)
+    driver.set_script_timeout(5)
+    driver.set_page_load_timeout(5)
 
     driver.get(login_url)
     soup = bs.BeautifulSoup(driver.page_source, "lxml")
