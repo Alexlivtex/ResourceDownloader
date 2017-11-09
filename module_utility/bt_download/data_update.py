@@ -101,6 +101,7 @@ def analysis_website():
 while True:
     try:
         analysis_website()
+        break
     except:
         continue
 
