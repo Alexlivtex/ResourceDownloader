@@ -5,7 +5,7 @@ import pickle
 import os
 from selenium.webdriver.common.keys import Keys
 
-max_nocode_count = 2031
+max_nocode_count = 2500
 
 base_no_code_url = "http://t66y.com/thread0806.php?fid=2&search=&page="
 login_url = "http://t66y.com/login.php"
@@ -98,4 +98,9 @@ def analysis_website():
                 total_err_list.append(item_link + "\n")
 
 
-analysis_website()
+while True:
+    try:
+        analysis_website()
+    except:
+        continue
+
