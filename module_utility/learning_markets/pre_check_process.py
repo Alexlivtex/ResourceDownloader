@@ -14,6 +14,7 @@ def pre_check_net_disk():
             bypy_list()
             break
         except:
+            print("First try precheck failed, try again!")
             continue
 
     f_net = open("net_result", "r")

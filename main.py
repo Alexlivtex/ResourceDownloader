@@ -21,6 +21,7 @@ def main():
             post_process()
             break
         except:
+            print("First try upload failed, try again!")
             continue
 
 main()
