@@ -53,6 +53,8 @@ def start_extract_learning_markets(update=True):
     global total_list
     global net_disk_list
 
+    pre_check_net_disk()
+
     if os.path.exists(finished_pickle_path):
         f_pickle = open(finished_pickle_path, "rb")
         finished_list = pickle.load(f_pickle)
