@@ -1,21 +1,10 @@
 import pickle
 import os
-from ..timeout.timeout import timeout
 
 def pre_check_net_disk():
     total_list = []
     #call(["bypy", "list", "learning_markets_video", " > ", "net_result"])
-    while True:
-        try:
-            @timeout(15)
-            def bypy_list():
-                os.system("bypy list learning_markets_video > net_result")
-                return
-            bypy_list()
-            break
-        except:
-            print("First try precheck failed, try again!")
-            continue
+    os.system("bypy list learning_markets_video > net_result")
 
     f_net = open("net_result", "r")
     test_lines = f_net.readlines()

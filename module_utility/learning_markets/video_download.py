@@ -53,8 +53,6 @@ def start_extract_learning_markets(update=True):
     global total_list
     global net_disk_list
 
-    pre_check_net_disk()
-
     if os.path.exists(finished_pickle_path):
         f_pickle = open(finished_pickle_path, "rb")
         finished_list = pickle.load(f_pickle)
@@ -65,10 +63,7 @@ def start_extract_learning_markets(update=True):
         total_list = pickle.load(f_total)
         f_total.close()
 
-    if os.path.exists(net_disk_pickle_path):
-        f_net_disk = open(net_disk_pickle_path, "rb")
-        net_disk_list = pickle.load(f_net_disk)
-        f_net_disk.close()
+
 
     if update is True:
         driver = webdriver.Firefox()
@@ -121,6 +116,13 @@ def start_extract_learning_markets(update=True):
         driver.quit()
 
     else:
+        pre_check_net_disk()
+
+        if os.path.exists(net_disk_pickle_path):
+            f_net_disk = open(net_disk_pickle_path, "rb")
+            net_disk_list = pickle.load(f_net_disk)
+            f_net_disk.close()
+
         if os.path.exists(total_pickle_path):
             f_total = open(total_pickle_path, "rb")
             total_list = pickle.load(f_total)
