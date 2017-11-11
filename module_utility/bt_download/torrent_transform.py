@@ -8,6 +8,10 @@ import os
 import shutil
 import time
 import pickle
+import threading
+import math
+from itertools import islice
+
 
 tmp_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
@@ -15,6 +19,7 @@ pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 finished_transform_list = []
 finished_transform_data = os.path.join("file_config", "bt_download", "finished_transform.pickle")
 
+max_thread_count = 8
 
 
 def magnet2torrent(magnet, output_name=None):
@@ -76,24 +81,11 @@ def magnet2torrent(magnet, output_name=None):
     return output
 
 
-def torrent_transform():
-    global finished_transform_list
-    total_list = {}
-
-    if os.path.exists(pickle_data):
-        f_pickle = open(pickle_data, "rb")
-        total_list = pickle.load(f_pickle)
-        f_pickle.close()
-
-    if os.path.exists(finished_transform_data):
-        f = open(finished_transform_data, "rb")
-        finished_transform_list = pickle.load(f)
-        f.close()
-
-    for link_index in total_list:
-        if total_list[link_index][1][:6] == "magnet":
-            link = total_list[link_index][1]
-            if link in finished_transform_list and os.path.exists(os.path.join(tmp_dir_name, link.split(":")[-1] + ".torrent")):
+def torrent_transform(sub_dic):
+    for link_index in sub_dic:
+        if sub_dic[link_index][1][:6] == "magnet":
+            link = sub_dic[link_index][1]
+            if os.path.exists(os.path.join(tmp_dir_name, link.split(":")[-1] + ".torrent")):
                 print("{} has already finished transforming".format(link))
                 continue
             else:
@@ -104,4 +96,29 @@ def torrent_transform():
                     continue
 
 
-torrent_transform()
+def dict_chunks(total_dict, sub_count):
+    it = iter(total_dict)
+    for i in range(0, len(total_dict), sub_count):
+        yield {k:total_dict[k] for k in islice(it, sub_count)}
+
+def main():
+    total_list = {}
+    if os.path.exists(pickle_data):
+        f_pickle = open(pickle_data, "rb")
+        total_list = pickle.load(f_pickle)
+        print(len(total_list))
+        f_pickle.close()
+
+    threads = []
+    list_sub_dicts = list(dict_chunks(total_list, math.ceil(len(total_list) / max_thread_count)))
+    for i in range(max_thread_count):
+        threads.append(threading.Thread(target=torrent_transform, args=(list_sub_dicts[i] ,)))
+
+    for t in threads:
+        t.setDaemon(True)
+        t.start()
+
+    for thread_index in threads:
+        thread_index.join()
+
+main()

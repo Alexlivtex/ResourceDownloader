@@ -7,17 +7,16 @@ import os
 MAX_TIME_LEARNING_MARKETS = 15*60
 MAX_TIME_BT_DOWNLOAD = 45*60
 
-@timeout(MAX_TIME_LEARNING_MARKETS)
-def upload_learning_markets(path):
-    bp = ByPy()
-    bp.upload(path)
-
 def main():
     #Download the latest learning markets video
     start_extract_learning_markets(True)
     start_extract_learning_markets(False)
     while True:
         try:
+            @timeout(MAX_TIME_LEARNING_MARKETS)
+            def upload_learning_markets(path):
+                bp = ByPy()
+                bp.upload(path)
             upload_learning_markets("file_download")
             post_process()
             break
