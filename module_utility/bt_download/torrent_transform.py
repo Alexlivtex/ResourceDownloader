@@ -110,7 +110,7 @@ def main():
         f_pickle.close()
 
     threads = []
-    list_sub_dicts = list(dict_chunks(total_list, math.ceil(len(total_list) / max_thread_count)))
+    list_sub_dicts = list(dict_chunks(total_list, int(math.ceil(len(total_list) / max_thread_count))))
     for i in range(max_thread_count):
         threads.append(threading.Thread(target=torrent_transform, args=(list_sub_dicts[i] ,)))
 
