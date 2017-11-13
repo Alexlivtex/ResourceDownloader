@@ -19,7 +19,7 @@ pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 finished_transform_list = []
 finished_transform_data = os.path.join("file_config", "bt_download", "finished_transform.pickle")
 
-max_thread_count = 20
+max_thread_count = 8
 
 
 def magnet2torrent(magnet, output_name=None):
