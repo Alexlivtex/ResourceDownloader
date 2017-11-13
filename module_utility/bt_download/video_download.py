@@ -4,6 +4,7 @@ import libtorrent as lt
 import time
 import sys
 import shutil
+from compress_folder import compress_folder
 
 from check_disk_status import check_max_acceptable_size
 
@@ -39,11 +40,12 @@ def download_torrent(torrent_file):
     print(file_size)
     print(check_max_acceptable_size())
 
-    if file_size > check_max_acceptable_size():
-        print("File is too large, exit!")
-        return
-    else:
-        print("File size is OK, can be downloaded!")
+    if not os.path.exists(current_downloading_data):
+        if file_size > check_max_acceptable_size():
+            print("File is too large, exit!")
+            return
+        else:
+            print("File size is OK, can be downloaded!")
 
     while(not s.is_seeding):
         s = h.status()
@@ -65,10 +67,9 @@ def download_torrent(torrent_file):
             shutil.rmtree(os.path.join(bt_download_dir, h.name()))
             return
     print h.name(), 'complete'
-
-
-
-
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    timestr = timestr + "-download"
+    compress_folder(os.path.join(bt_download_dir, h.name()), os.path.join(bt_download_dir, timestr))
 
 def begin_download():
     global finished_downloading_list
@@ -80,7 +81,7 @@ def begin_download():
         f.close()
 
     if os.path.exists(failed_downloading_data):
-        f = open(failed_downloading_data)
+        f = open(failed_downloading_data, "rb")
         failed_download_list = pickle.load(f)
         f.close()
 
@@ -99,7 +100,10 @@ def begin_download():
                 f.close()
                 download_torrent(os.path.join(torrent_dir_name, index))
                 os.remove(current_downloading_data)
+                break
+            else:
+                continue
 
 
 
-begin_download()
+#begin_download()
