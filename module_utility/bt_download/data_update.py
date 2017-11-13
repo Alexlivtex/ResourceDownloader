@@ -13,10 +13,9 @@ base_url = "http://t66y.com"
 
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 
-def analysis_website():
+def analysis_website(driver):
     total_dic_map = {}
     total_err_list = []
-    driver = webdriver.Firefox()
     driver.implicitly_wait(20)
     driver.set_script_timeout(5)
     driver.set_page_load_timeout(5)
@@ -88,20 +87,27 @@ def analysis_website():
                 torrent_soup = bs.BeautifulSoup(driver.page_source)
                 torrent_link = torrent_soup.findAll("a")[0]
                 print(torrent_link["href"])
+                if torrent_link["href"].split(":")[0] == "magnet":
+                    print("Old magnet format")
+                else:
+                    print("New download torrent format")
+                '''
                 total_dic_map[item_link] = [title, torrent_link["href"]]
                 if len(total_dic_map) % 10 == 0:
                     f_pickle = open(pickle_data, "wb")
                     pickle.dump(total_dic_map, f_pickle)
                     f_pickle.close()
+                '''
             except:
                 print("{} has some error in it!".format(item_link))
                 total_err_list.append(item_link + "\n")
 
 
-while True:
-    try:
-        analysis_website()
-        break
-    except:
-        continue
+
+try:
+    web_driver = webdriver.Firefox()
+    analysis_website(web_driver)
+    web_driver.quit()
+except:
+    web_driver.quit()
 
