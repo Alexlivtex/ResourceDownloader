@@ -1,5 +1,6 @@
 from module_utility.learning_markets.video_download import start_extract_learning_markets
 from module_utility.learning_markets.post_deal_process import post_process
+from module_utility.bt_download.video_download import begin_download
 from bypy import ByPy
 import os
 
@@ -32,6 +33,7 @@ def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
 MAX_TIME_LEARNING_MARKETS = 15*60
 MAX_TIME_BT_DOWNLOAD = 45*60
 
+
 def main():
     #Download the latest learning markets video
     @timeout(MAX_TIME_LEARNING_MARKETS)
@@ -48,5 +50,23 @@ def main():
         except:
             print("First try upload failed, try again!")
             continue
+
+    #Download the download the bt video
+    @timeout(MAX_TIME_BT_DOWNLOAD)
+    def upload_bt_download(path):
+        bp = ByPy()
+        bp.upload(path)
+
+    begin_download()
+    while True:
+        try:
+            upload_bt_download("file_download")
+            os.system("rm -rf file_download/bt_download/download_dir/*")
+            break
+        except:
+            print("Upload video failed, try again!")
+            continue
+
+
 
 main()
