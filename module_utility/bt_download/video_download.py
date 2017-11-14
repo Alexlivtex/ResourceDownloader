@@ -87,10 +87,18 @@ def begin_download():
         f = open(finished_downloading_data, "rb")
         finished_downloading_list = pickle.load(f)
         f.close()
+    else:
+        f = open(finished_downloading_data, "wb")
+        pickle.dump(finished_downloading_list, f)
+        f.close()
 
     if os.path.exists(failed_downloading_data):
         f = open(failed_downloading_data, "rb")
         failed_download_list = pickle.load(f)
+        f.close()
+    else:
+        f = open(failed_downloading_data, "wb")
+        pickle.dump(failed_download_list, f)
         f.close()
 
     max_download_count = 5
