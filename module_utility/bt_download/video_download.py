@@ -7,6 +7,7 @@ import shutil
 from compress_folder import compress_folder
 
 from check_disk_status import check_max_acceptable_size
+from ..learning_markets.check_disk_status import check_disk_percentage
 
 torrent_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
 bt_download_dir = os.path.join("file_download","bt_download", "download_dir")
@@ -20,6 +21,8 @@ failed_download_list = []
 failed_downloading_data = os.path.join("file_config", "bt_download", "failed_downloading.pickle")
 
 def download_torrent(torrent_file):
+    global finished_downloading_list
+    global failed_download_list
     ses = lt.session()
     ses.listen_on(6881, 6891)
 
@@ -60,13 +63,18 @@ def download_torrent(torrent_file):
         if download_time > 18000:
             print("{} has spent too much time to download, quit it!".format(torrent_file))
             f = open(failed_downloading_data, "wb")
-            failed_download = pickle.load(f)
-            failed_download.append(torrent_file)
-            pickle.dump(failed_download, f)
+            failed_download_list = pickle.load(f)
+            failed_download_list.append(torrent_file)
+            pickle.dump(failed_download_list, f)
             f.close()
             shutil.rmtree(os.path.join(bt_download_dir, h.name()))
             return
     print h.name(), 'complete'
+    f = open(finished_downloading_data, "wb")
+    finished_downloading_list = pickle.load(f)
+    finished_downloading_list.append(torrent_file)
+    pickle.dump(finished_downloading_list, f)
+    f.close()
     timestr = time.strftime("%Y%m%d-%H%M%S")
     timestr = timestr + "-download"
     compress_folder(os.path.join(bt_download_dir, h.name()), os.path.join(bt_download_dir, timestr))
@@ -85,14 +93,25 @@ def begin_download():
         failed_download_list = pickle.load(f)
         f.close()
 
-    if os.path.exists(current_downloading_data):
-        f = open(current_downloading_data, "rb")
-        current_downloading = pickle.load(f)
-        f.close()
-        download_torrent(os.path.join(torrent_dir_name, current_downloading))
-        os.remove(current_downloading_data)
-    else:
-        for index in os.listdir(torrent_dir_name):
+    max_download_count = 5
+    current_downloaded = 0
+    for index in os.listdir(torrent_dir_name):
+        if current_downloaded >= max_download_count:
+            break
+
+        percent = check_disk_percentage()
+        if percent > 0.80:
+            break
+
+        if os.path.exists(current_downloading_data):
+            f = open(current_downloading_data, "rb")
+            current_downloading = pickle.load(f)
+            f.close()
+            download_torrent(os.path.join(torrent_dir_name, current_downloading))
+            os.remove(current_downloading_data)
+            current_downloaded += 1
+            continue
+        else:
             print(index)
             if index.split(".")[-1] == "torrent" and index not in finished_downloading_list and index not in failed_download_list:
                 f = open(current_downloading_data, "wb")
@@ -100,10 +119,6 @@ def begin_download():
                 f.close()
                 download_torrent(os.path.join(torrent_dir_name, index))
                 os.remove(current_downloading_data)
-                break
-            else:
-                continue
-
-
-
+                current_downloaded += 1
+            continue
 #begin_download()
