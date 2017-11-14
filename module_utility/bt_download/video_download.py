@@ -63,7 +63,6 @@ def download_torrent(torrent_file):
         if download_time > 18000:
             print("{} has spent too much time to download, quit it!".format(torrent_file))
             f = open(failed_downloading_data, "wb")
-            failed_download_list = pickle.load(f)
             failed_download_list.append(torrent_file)
             pickle.dump(failed_download_list, f)
             f.close()
@@ -71,7 +70,6 @@ def download_torrent(torrent_file):
             return
     print h.name(), 'complete'
     f = open(finished_downloading_data, "wb")
-    finished_downloading_list = pickle.load(f)
     finished_downloading_list.append(torrent_file)
     pickle.dump(finished_downloading_list, f)
     f.close()
