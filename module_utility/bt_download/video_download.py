@@ -20,7 +20,7 @@ current_downloading_data = os.path.join("file_config", "bt_download", "current_d
 failed_download_list = []
 failed_downloading_data = os.path.join("file_config", "bt_download", "failed_downloading.pickle")
 
-def download_torrent(torrent_file):
+def download_torrent(torrent_file, torrent_name):
     global finished_downloading_list
     global failed_download_list
     ses = lt.session()
@@ -63,14 +63,14 @@ def download_torrent(torrent_file):
         if download_time > 18000:
             print("{} has spent too much time to download, quit it!".format(torrent_file))
             f = open(failed_downloading_data, "wb")
-            failed_download_list.append(torrent_file)
+            failed_download_list.append(torrent_name)
             pickle.dump(failed_download_list, f)
             f.close()
             shutil.rmtree(os.path.join(bt_download_dir, h.name()))
             return
     print h.name(), 'complete'
     f = open(finished_downloading_data, "wb")
-    finished_downloading_list.append(torrent_file)
+    finished_downloading_list.append(torrent_name)
     pickle.dump(finished_downloading_list, f)
     f.close()
     timestr = time.strftime("%Y%m%d-%H%M%S")
@@ -113,7 +113,7 @@ def begin_download():
             f = open(current_downloading_data, "rb")
             current_downloading = pickle.load(f)
             f.close()
-            download_torrent(os.path.join(torrent_dir_name, current_downloading))
+            download_torrent(os.path.join(torrent_dir_name, current_downloading), current_downloading)
             os.remove(current_downloading_data)
             current_downloaded += 1
             continue
@@ -123,7 +123,7 @@ def begin_download():
                 f = open(current_downloading_data, "wb")
                 pickle.dump(index, f)
                 f.close()
-                download_torrent(os.path.join(torrent_dir_name, index))
+                download_torrent(os.path.join(torrent_dir_name, index), index)
                 os.remove(current_downloading_data)
                 current_downloaded += 1
             continue
