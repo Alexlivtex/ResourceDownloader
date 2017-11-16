@@ -60,7 +60,7 @@ def download_torrent(torrent_file, torrent_name):
 
         time.sleep(1)
         download_time += 1
-        if download_time > 18000:
+        if download_time > 10000:
             print("{} has spent too much time to download, quit it!".format(torrent_file))
             f = open(failed_downloading_data, "wb")
             failed_download_list.append(torrent_name)
@@ -99,7 +99,7 @@ def begin_download():
         pickle.dump(failed_download_list, f)
         f.close()
 
-    max_download_count = 5
+    max_download_count = 3
     current_downloaded = 0
     for index in os.listdir(torrent_dir_name):
         if current_downloaded >= max_download_count:
