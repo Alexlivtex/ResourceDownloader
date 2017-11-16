@@ -8,6 +8,7 @@ from functools import wraps
 import errno
 import os
 import signal
+import time
 
 class TimeoutError(Exception):
     pass
@@ -31,7 +32,8 @@ def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
     return decorator
 
 MAX_TIME_LEARNING_MARKETS = 15*60
-MAX_TIME_BT_DOWNLOAD = 45*60
+MAX_TIME_BT_DOWNLOAD = 30*60
+MAX_TIME_UPLOAD_SLEEP = 5*60
 
 
 def main():
@@ -54,18 +56,22 @@ def main():
     '''
     #Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
-    def upload_bt_download(path):
-        bp = ByPy()
+    def upload_bt_download(bp, path):
         bp.upload(path)
+        bp.cleancache()
 
     begin_download()
     while True:
         try:
-            upload_bt_download("file_download")
+            bp_instance = ByPy()
+            time.sleep(MAX_TIME_UPLOAD_SLEEP)
+            upload_bt_download(bp_instance, "file_download")
             os.system("rm -rf file_download/bt_download/download_dir/*")
+            bp_instance.quit()
             break
         except:
             print("Upload video failed, try again!")
+            bp_instance.quit()
             continue
 
 
