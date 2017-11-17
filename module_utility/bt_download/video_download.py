@@ -60,7 +60,7 @@ def download_torrent(torrent_file, torrent_name):
 
         time.sleep(1)
         download_time += 1
-        if download_time > 10000:
+        if download_time > 18000:
             print("{} has spent too much time to download, quit it!".format(torrent_file))
             f = open(failed_downloading_data, "wb")
             failed_download_list.append(torrent_name)
