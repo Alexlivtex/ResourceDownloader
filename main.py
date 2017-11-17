@@ -56,22 +56,20 @@ def main():
     '''
     #Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
-    def upload_bt_download(bp, path):
+    def upload_bt_download(path):
+        bp = ByPy()
         bp.upload(path)
         bp.cleancache()
 
     begin_download()
     while True:
         try:
-            bp_instance = ByPy()
             time.sleep(MAX_TIME_UPLOAD_SLEEP)
-            upload_bt_download(bp_instance, "file_download")
+            upload_bt_download("file_download")
             os.system("rm -rf file_download/bt_download/download_dir/*")
-            bp_instance.quit()
             break
         except:
             print("Upload video failed, try again!")
-            bp_instance.quit()
             continue
 
 
