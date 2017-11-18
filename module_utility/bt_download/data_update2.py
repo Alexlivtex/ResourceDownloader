@@ -94,6 +94,18 @@ def analysis_website(driver):
 
 
 
+
+while True:
+    web_driver = webdriver.Firefox()
+    try:
+        check_data()
+        analysis_website(web_driver)
+        check_data()
+    except:
+        web_driver.quit()
+        continue
+
+'''
 web_driver = webdriver.Firefox()
 try:
     check_data()
@@ -102,3 +114,4 @@ try:
 except:
     web_driver.quit()
 web_driver.quit()
+'''

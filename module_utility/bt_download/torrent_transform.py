@@ -124,4 +124,11 @@ def main():
     for thread_index in threads:
         thread_index.join()
 
-main()
+while True:
+    try:
+        print("Begin to transform the torrent!")
+        main()
+    except:
+        print("Wait another period of time to keep on!")
+        time.sleep(100)
+        continue
