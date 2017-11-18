@@ -41,14 +41,14 @@ def analysis_website(driver):
         total_dic_map = pickle.load(f_data_pickle)
         f_data_pickle.close()
 
-    driver.set_script_timeout(5)
-    driver.set_page_load_timeout(5)
+    driver.set_script_timeout(20)
+    driver.set_page_load_timeout(20)
     for page_index in range(max_nocode_count):
         url = base_no_code_url + str(page_index)
         try:
             driver.get(url)
         except:
-            print("Execution time exceeded!")
+            print("Execution time exceeded when loading the total page!")
         #time.sleep(2)
         page_list_content = bs.BeautifulSoup(driver.page_source).findAll("h3")
         for title_item in page_list_content:
@@ -59,12 +59,10 @@ def analysis_website(driver):
                 if item_link in total_dic_map:
                     print("{} has already exists".format(item_link))
                     continue
-                print(title)
-                print(item_link)
                 try:
                     driver.get(item_link)
                 except:
-                    print("Execution time exceeded!")
+                    print("Execution time exceeded when loading sub page!")
                 #time.sleep(2)
                 item_soup = bs.BeautifulSoup(driver.page_source)
                 title_content = item_soup.findAll("title")[0].text
@@ -75,12 +73,14 @@ def analysis_website(driver):
                     f_error_list.close()
                     driver.quit()
                     return
-                torrent_link = item_soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
+                torrent_link = item_soup.findAll(text=re.compile('^http://www.rmdown.com'))
                 if len(torrent_link) > 0 and len(torrent_link[0].split("=")) > 1:
                     hash_value = torrent_link[0].split("=")[-1]
                     hash_value = hash_value[-40:]
                     magnet_link = "magnet:?xt=urn:btih:" + str(hash_value)
-                    print("Magnet value is {}".format(magnet_link))
+                    print("Item link is    : {}".format(item_link))
+                    print("Page title is   : {}".format(title))
+                    print("Magnet value is : {}".format(magnet_link))
 
                     total_dic_map[item_link] = [title, magnet_link]
                     if len(total_dic_map) % 10 == 0:
