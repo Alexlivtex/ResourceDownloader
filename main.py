@@ -37,14 +37,17 @@ MAX_TIME_UPLOAD_SLEEP = 5*60
 
 
 def main():
-    '''
     #Download the latest learning markets video
     @timeout(MAX_TIME_LEARNING_MARKETS)
     def upload_learning_markets(path):
         bp = ByPy()
         bp.upload(path)
 
-    start_extract_learning_markets()
+    try:
+        start_extract_learning_markets()
+    except:
+        print("Skip this function, got to the next one!")
+
     while True:
         try:
             upload_learning_markets("file_download")
@@ -53,7 +56,6 @@ def main():
         except:
             print("First try upload failed, try again!")
             continue
-    '''
     #Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
