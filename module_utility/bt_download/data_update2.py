@@ -96,8 +96,8 @@ def analysis_website(driver):
 
 
 while True:
-    web_driver = webdriver.Firefox()
     try:
+        web_driver = webdriver.Firefox()
         check_data()
         analysis_website(web_driver)
         check_data()
