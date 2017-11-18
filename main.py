@@ -37,6 +37,8 @@ MAX_TIME_UPLOAD_SLEEP = 5*60
 
 
 def main():
+
+    '''
     #Download the latest learning markets video
     @timeout(MAX_TIME_LEARNING_MARKETS)
     def upload_learning_markets(path):
@@ -56,6 +58,8 @@ def main():
         except:
             print("First try upload failed, try again!")
             continue
+    '''
+
     #Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
