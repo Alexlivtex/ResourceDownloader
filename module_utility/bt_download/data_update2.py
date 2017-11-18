@@ -5,6 +5,7 @@ import pickle
 import os
 import re
 from selenium.webdriver.common.keys import Keys
+from check_total_data import check_data
 
 max_nocode_count = 2500
 
@@ -75,15 +76,17 @@ def analysis_website(driver):
                     driver.quit()
                     return
                 torrent_link = item_soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
-                print("=============={}==============".format(torrent_link))
+                if len(torrent_link) > 0 and len(torrent_link[0].split("=")) > 1:
+                    hash_value = torrent_link[0].split("=")[-1]
+                    hash_value = hash_value[-40:]
+                    magnet_link = "magnet:?xt=urn:btih:" + str(hash_value)
+                    print("Magnet value is {}".format(magnet_link))
 
-                '''
-                total_dic_map[item_link] = [title, torrent_link["href"]]
-                if len(total_dic_map) % 10 == 0:
-                    f_pickle = open(pickle_data, "wb")
-                    pickle.dump(total_dic_map, f_pickle)
-                    f_pickle.close()
-                '''
+                    total_dic_map[item_link] = [title, magnet_link]
+                    if len(total_dic_map) % 10 == 0:
+                        f_pickle = open(pickle_data, "wb")
+                        pickle.dump(total_dic_map, f_pickle)
+                        f_pickle.close()
             except:
                 print("{} has some error in it!".format(item_link))
                 total_err_list.append(item_link + "\n")
@@ -92,15 +95,10 @@ def analysis_website(driver):
 
 
 web_driver = webdriver.Firefox()
-analysis_website(web_driver)
+try:
+    check_data()
+    analysis_website(web_driver)
+    check_data()
+except:
+    web_driver.quit()
 web_driver.quit()
-
-'''
-while True:
-    try:
-        web_driver = webdriver.Firefox()
-        analysis_website(web_driver)
-        web_driver.quit()
-    except:
-        web_driver.quit()
-'''
