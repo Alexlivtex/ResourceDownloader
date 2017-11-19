@@ -99,7 +99,7 @@ def begin_download():
         pickle.dump(failed_download_list, f)
         f.close()
 
-    max_download_count = 3
+    max_download_count = 1
     current_downloaded = 0
     for index in os.listdir(torrent_dir_name):
         if current_downloaded >= max_download_count:
