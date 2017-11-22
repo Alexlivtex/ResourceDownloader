@@ -79,9 +79,4 @@ def main():
             continue
 
 while True:
-    try:
-        main()
-    except:
-        print("Exception occured, continue!")
-        os.system("rm -rf file_download/bt_download/download_dir/*")
-        continue
+    main()
