@@ -32,7 +32,7 @@ def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
     return decorator
 
 MAX_TIME_LEARNING_MARKETS = 15*60
-MAX_TIME_BT_DOWNLOAD = 30*60
+MAX_TIME_BT_DOWNLOAD = 15*60
 MAX_TIME_UPLOAD_SLEEP = 5*60
 
 
