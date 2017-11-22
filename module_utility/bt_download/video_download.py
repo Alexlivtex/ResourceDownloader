@@ -118,6 +118,12 @@ def begin_download():
             current_downloaded += 1
             continue
         else:
+            file_list = os.listdir(bt_download_dir)
+            if len(file_list) > 0:
+                for file_item in file_list:
+                    if os.path.isdir(os.path.join(bt_download_dir, file_item)):
+                        shutil.rmtree(os.path.join(bt_download_dir, file_item))
+                break
             print(index)
             if index.split(".")[-1] == "torrent" and index not in finished_downloading_list and index not in failed_download_list:
                 f = open(current_downloading_data, "wb")
