@@ -6,6 +6,7 @@ import sys
 import shutil
 from compress_folder import compress_folder
 import progressbar
+import math
 
 from check_disk_status import check_max_acceptable_size
 from ..learning_markets.check_disk_status import check_disk_percentage
@@ -20,6 +21,9 @@ current_downloading_data = os.path.join("file_config", "bt_download", "current_d
 
 failed_download_list = []
 failed_downloading_data = os.path.join("file_config", "bt_download", "failed_downloading.pickle")
+
+MAX_AMOUNT_TIME = 18000
+
 
 def download_torrent(torrent_file, torrent_name):
     global finished_downloading_list
@@ -64,23 +68,27 @@ def download_torrent(torrent_file, torrent_name):
     '''
 
     #bar = progressbar.ProgressBar(max_value=s.total_wanted, widgets=[format_custom_text, progressbar.Bar()])
+    average_speed = float(s.total_wanted)/float(MAX_AMOUNT_TIME)
 
     while(not s.is_seeding):
         s = h.status()
 
         state_str = ['queued', 'checking', 'downloading metadata','downloading', 'finished', 'seeding', 'allocating', 'checking fastresume']
-        print '\r%.2f%% complete %.2f%% Spent (down: %.1f kb/s up: %.1f kB/s peers: %d) %s\n' % \
-          (s.progress * 100, (float(download_time)/float(18000)) * 100,  s.download_rate / 1000, s.upload_rate / 1000, \
+        print '\r%.2f%% complete %d Remain (down: %.1f kb/s up: %.1f kB/s peers: %d) %s\n' % \
+          (s.progress * 100, MAX_AMOUNT_TIME - download_time,  s.download_rate / 1000, s.upload_rate / 1000, \
           s.num_peers, state_str[s.state]),
         sys.stdout.flush()
 
         time.sleep(1)
-        download_time += 1
+        if s.download_rate < average_speed:
+            download_time += 1
+        else:
+            download_time = download_time - math.ceil(float(s.download_rate)/float(average_speed))
 
         #format_custom_text.update_mapping(down=s.download_rate/1000, up=s.upload_rate/1000, used=(float(download_time)/float(18000))*100, finished=s.progress * 100)
         #bar.update(s.total_wanted_done)
 
-        if download_time > 18000:
+        if download_time > MAX_AMOUNT_TIME:
             print("{} has spent too much time to download, quit it!".format(torrent_file))
             f = open(failed_downloading_data, "wb")
             failed_download_list.append(torrent_name)
