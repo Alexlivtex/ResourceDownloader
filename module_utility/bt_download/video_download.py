@@ -51,6 +51,7 @@ def download_torrent(torrent_file, torrent_name):
         else:
             print("File size is OK, can be downloaded!")
 
+    '''
     format_custom_text = progressbar.FormatCustomText(
         "Down : %(down).1f k/s, Up : %(up).1f k/s, Time used : %(used).1f%%, Progress : %(finished).1f%%",
         dict(
@@ -60,25 +61,24 @@ def download_torrent(torrent_file, torrent_name):
             finished=0.25,
         ),
     )
+    '''
 
-    bar = progressbar.ProgressBar(max_value=s.total_wanted, widgets=[format_custom_text, progressbar.Bar()])
+    #bar = progressbar.ProgressBar(max_value=s.total_wanted, widgets=[format_custom_text, progressbar.Bar()])
 
     while(not s.is_seeding):
         s = h.status()
-        '''
+
         state_str = ['queued', 'checking', 'downloading metadata','downloading', 'finished', 'seeding', 'allocating', 'checking fastresume']
-        print '\r%.2f%% complete (down: %.1f kb/s up: %.1f kB/s peers: %d) %s\n' % \
-          (s.progress * 100, s.download_rate / 1000, s.upload_rate / 1000, \
+        print '\r%.2f%% complete %.2f%% Spent (down: %.1f kb/s up: %.1f kB/s peers: %d) %s\n' % \
+          (s.progress * 100, (float(download_time)/float(18000)) * 100,  s.download_rate / 1000, s.upload_rate / 1000, \
           s.num_peers, state_str[s.state]),
         sys.stdout.flush()
-        '''
-
 
         time.sleep(1)
         download_time += 1
 
-        format_custom_text.update_mapping(down=s.download_rate/1000, up=s.upload_rate/1000, used=(float(download_time)/float(18000))*100, finished=s.progress * 100)
-        bar.update(s.total_wanted_done)
+        #format_custom_text.update_mapping(down=s.download_rate/1000, up=s.upload_rate/1000, used=(float(download_time)/float(18000))*100, finished=s.progress * 100)
+        #bar.update(s.total_wanted_done)
 
         if download_time > 18000:
             print("{} has spent too much time to download, quit it!".format(torrent_file))
