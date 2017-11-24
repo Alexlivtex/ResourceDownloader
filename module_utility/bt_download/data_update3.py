@@ -3,6 +3,8 @@ import time
 import bs4 as bs
 import pickle
 import os
+import re
+from check_total_data import check_data
 
 max_nocode_count = 2500
 
@@ -10,14 +12,59 @@ base_no_code_url = "http://t66y.com/thread0806.php?fid=2&search=&page="
 login_url = "http://t66y.com/login.php"
 base_url = "http://t66y.com"
 
-#pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
+pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 pickle_url_data = os.path.join("file_config", "bt_download", "data_url_total.pickle")
+
+def get_torrent_link(driver):
+    driver.set_page_load_timeout(15)
+    driver.set_script_timeout(15)
+    total_data_url_list = []
+    current_total_url_list = []
+    if not os.path.exists(pickle_url_data):
+        print("Data file not exists!")
+        return
+    else:
+        print("Data file exists!")
+        f_current_url = open(pickle_url_data, "rb")
+        current_total_url_list = pickle.load(f_current_url)
+        f_current_url.close()
+
+    if os.path.exists(pickle_data):
+        check_data()
+        f_total_data = open(pickle_data, "rb")
+        total_data_dic = pickle.load(f_total_data)
+        f_total_data.close()
+        for dic_index in total_data_dic:
+            total_data_url_list.append(dic_index)
+
+    for current_url_index in current_total_url_list:
+        if current_url_index[0] in total_data_url_list:
+            print("{} has already exists".format(current_url_index))
+        else:
+            try:
+                driver.get(current_url_index[0])
+            except:
+                print("Time exceed when loading the page")
+            soup = bs.BeautifulSoup(web_driver.page_source, "lxml")
+            # soup = bs.BeautifulSoup(requests.get(url).text, 'html.parser')
+            torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
+            if len(torrent_link) > 0 and len(torrent_link[0]) > len("http://www.rmdown.com"):
+                '''
+                if len(torrent_link[0].split("=")) > 1:
+                    hash_value = torrent_link[0].split("=")[-1]
+                    hash_value = hash_value[-40:]
+                    magnet_link = "magnet:?xt=urn:btih:" + str(hash_value)
+                    print(torrent_link[0])
+                    print(torrent_link[1])
+                    print(magnet_link)
+                '''
+                print(torrent_link[0])
+            else:
+                print("Cant not find the torrent link for {}".format(current_url_index[0]))
+
 
 def analysis_website(driver):
     total_url_list = []
-    driver.implicitly_wait(20)
-    driver.set_script_timeout(5)
-    driver.set_page_load_timeout(5)
 
     driver.get(login_url)
     soup = bs.BeautifulSoup(driver.page_source, "lxml")
@@ -40,6 +87,8 @@ def analysis_website(driver):
         f_data_pickle.close()
 
 
+    driver.set_script_timeout(5)
+    driver.set_page_load_timeout(5)
     for page_index in range(max_nocode_count):
         url = base_no_code_url + str(page_index)
         try:
@@ -53,7 +102,7 @@ def analysis_website(driver):
                 link = title_item.findAll("a")[0]
                 title = link.text
                 item_link = base_url + "/" + link['href']
-                if item_link in total_url_list:
+                if [item_link, title] in total_url_list:
                     print("{} has already exists".format(item_link))
                     continue
                 print(title)
@@ -69,11 +118,7 @@ def analysis_website(driver):
                 print("{} has some error in it!".format(item_link))
 
 
-
-try:
-    web_driver = webdriver.Firefox()
-    analysis_website(web_driver)
-    web_driver.quit()
-except:
-    web_driver.quit()
-
+web_driver = webdriver.Firefox()
+analysis_website(web_driver)
+#get_torrent_link(web_driver)
+web_driver.quit()

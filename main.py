@@ -1,7 +1,10 @@
 from module_utility.learning_markets.video_download import start_extract_learning_markets
 from module_utility.learning_markets.post_deal_process import post_process
 from module_utility.bt_download.video_download import begin_download
+from module_utility.bt_download.data_update3 import analysis_website
+from module_utility.bt_download.data_update3 import get_torrent_link
 from bypy import ByPy
+from selenium import webdriver
 import os
 
 from functools import wraps
@@ -59,6 +62,26 @@ def main():
             print("First try upload failed, try again!")
             continue
     '''
+
+    #Get all the data link from the websites
+    web_driver = webdriver.Firefox()
+    try:
+        analysis_website(web_driver)
+    except:
+        web_driver.quit()
+    web_driver.quit()
+
+    time.sleep(5*60)
+
+    # Get all the data link from the websites
+    web_driver = webdriver.Firefox()
+    try:
+        get_torrent_link(web_driver)
+    except:
+        web_driver.quit()
+    web_driver.quit()
+
+    time.sleep(5 * 60)
 
     #Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
