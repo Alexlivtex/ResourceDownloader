@@ -14,7 +14,7 @@ import signal
 import time
 import pickle
 
-download_times = 1
+download_times = 2
 
 pickle_downloading_times = os.path.join("file_config", "bt_download", "downloading_times.pickle")
 
