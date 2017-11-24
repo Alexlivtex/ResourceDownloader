@@ -12,6 +12,11 @@ import errno
 import os
 import signal
 import time
+import pickle
+
+download_times = 1
+
+pickle_downloading_times = os.path.join("file_config", "bt_download", "downloading_times.pickle")
 
 class TimeoutError(Exception):
     pass
@@ -63,25 +68,26 @@ def main():
             continue
     '''
 
-    #Get all the data link from the websites
-    web_driver = webdriver.Firefox()
-    try:
-        analysis_website(web_driver)
-    except:
+    if download_times % 5 == 0:
+        # Get all the data link from the websites
+        web_driver = webdriver.Firefox()
+        try:
+            analysis_website(web_driver)
+        except:
+            web_driver.quit()
         web_driver.quit()
-    web_driver.quit()
 
-    time.sleep(5*60)
+        time.sleep(5 * 60)
 
-    # Get all the data link from the websites
-    web_driver = webdriver.Firefox()
-    try:
-        get_torrent_link(web_driver)
-    except:
+        # Get all the data link from the websites
+        web_driver = webdriver.Firefox()
+        try:
+            get_torrent_link(web_driver)
+        except:
+            web_driver.quit()
         web_driver.quit()
-    web_driver.quit()
 
-    time.sleep(5 * 60)
+        time.sleep(5 * 60)
 
     #Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
@@ -102,4 +108,14 @@ def main():
             continue
 
 while True:
+    if os.path.exists(pickle_downloading_times):
+        f_downloading = open(pickle_downloading_times, "rb")
+        download_times = pickle.load(f_downloading)
+        f_downloading.close()
+
     main()
+    download_times += 1
+
+    f_downloading = open(pickle_downloading_times, "wb")
+    pickle.dump(download_times, f_downloading)
+    f_downloading.close()
