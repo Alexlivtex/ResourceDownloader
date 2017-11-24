@@ -45,7 +45,7 @@ MAX_TIME_UPLOAD_SLEEP = 5*60
 
 
 def main():
-
+    global download_times
     '''
     #Download the latest learning markets video
     @timeout(MAX_TIME_LEARNING_MARKETS)
@@ -108,6 +108,7 @@ def main():
             continue
 
 while True:
+    global download_times
     if os.path.exists(pickle_downloading_times):
         f_downloading = open(pickle_downloading_times, "rb")
         download_times = pickle.load(f_downloading)
