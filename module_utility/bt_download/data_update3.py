@@ -45,7 +45,7 @@ def get_torrent_link(driver):
                 driver.get(current_url_index[0])
             except:
                 print("Time exceed when loading the page")
-            soup = bs.BeautifulSoup(web_driver.page_source, "lxml")
+            soup = bs.BeautifulSoup(driver.page_source, "lxml")
             # soup = bs.BeautifulSoup(requests.get(url).text, 'html.parser')
             torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
             if len(torrent_link) > 0 and len(torrent_link[0]) > len("http://www.rmdown.com"):
