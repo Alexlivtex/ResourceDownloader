@@ -7,6 +7,7 @@ def walk_file_path(path):
     file_list = []
     for fpathe, dirs, fs in os.walk(path):
         for f in fs:
+            f.encode('UTF-8')
             file_list.append(os.path.join(fpathe, f))
             print os.path.join(fpathe, f)
 
