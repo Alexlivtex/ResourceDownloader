@@ -14,6 +14,7 @@ base_url = "http://t66y.com"
 
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 pickle_url_data = os.path.join("file_config", "bt_download", "data_url_total.pickle")
+pickle_error_data = os.path.join("file_config", "bt_download", "data_error_total.pickle")
 
 def get_torrent_link(driver):
     driver.set_page_load_timeout(15)
@@ -21,6 +22,13 @@ def get_torrent_link(driver):
     total_data_url_list = []
     current_total_url_list = []
     total_data_dic = {}
+    total_error_list = []
+
+    if os.path.exists(pickle_error_data):
+        f_error = open(pickle_error_data, "rb")
+        total_error_list = pickle.load(f_error)
+        f_error.close()
+
     if not os.path.exists(pickle_url_data):
         print("Data file not exists!")
         return
@@ -65,6 +73,12 @@ def get_torrent_link(driver):
                         f_pickle.close()
             else:
                 print("Cant not find the torrent link for {}".format(current_url_index[0]))
+                if not current_url_index[0] in total_error_list:
+                    total_error_list.append(current_url_index[0])
+                    if len(total_error_list) % 10 == 0:
+                        f_error = open(pickle_error_data, "wb")
+                        pickle.dump(total_error_list, f_error)
+                        f_error.close()
 
 
 def analysis_website(driver):
