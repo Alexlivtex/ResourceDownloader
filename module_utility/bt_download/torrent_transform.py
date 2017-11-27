@@ -14,7 +14,7 @@ from itertools import islice
 
 
 tmp_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
-pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
+pickle_torrent_parse_data = os.path.join("file_config", "bt_download", "data_total_torrent_parse.pickle")
 
 finished_transform_list = []
 finished_transform_data = os.path.join("file_config", "bt_download", "finished_transform.pickle")
@@ -105,8 +105,8 @@ def dict_chunks(total_dict, sub_count):
 
 def main():
     total_list = {}
-    if os.path.exists(pickle_data):
-        f_pickle = open(pickle_data, "rb")
+    if os.path.exists(pickle_torrent_parse_data):
+        f_pickle = open(pickle_torrent_parse_data, "rb")
         total_list = pickle.load(f_pickle)
         print(len(total_list))
         f_pickle.close()

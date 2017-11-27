@@ -5,6 +5,7 @@ import pickle
 import os
 import re
 from check_total_data import check_data
+import shutil
 
 max_nocode_count = 2500
 
@@ -13,6 +14,7 @@ login_url = "http://t66y.com/login.php"
 base_url = "http://t66y.com"
 
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
+pickle_torrent_parse_data = os.path.join("file_config", "bt_download", "data_total_torrent_parse.pickle")
 pickle_url_data = os.path.join("file_config", "bt_download", "data_url_total.pickle")
 pickle_error_data = os.path.join("file_config", "bt_download", "data_error_total.pickle")
 
@@ -40,6 +42,14 @@ def get_torrent_link(driver):
 
     if os.path.exists(pickle_data):
         check_data()
+        while True:
+            try:
+                shutil.copy(pickle_data, pickle_torrent_parse_data)
+                break
+            except:
+                print("Current not able to copy the file!")
+                time.sleep(10)
+
         f_total_data = open(pickle_data, "rb")
         total_data_dic = pickle.load(f_total_data)
         f_total_data.close()
@@ -47,7 +57,7 @@ def get_torrent_link(driver):
             total_data_url_list.append(dic_index)
 
     for current_url_index in current_total_url_list:
-        if current_url_index[0] in total_data_url_list:
+        if current_url_index[0] in total_data_url_list or current_url_index[0] in total_error_list:
             print("{} has already exists".format(current_url_index[0]))
         else:
             try:
