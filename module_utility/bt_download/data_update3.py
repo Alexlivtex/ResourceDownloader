@@ -48,7 +48,7 @@ def get_torrent_link(driver):
 
     for current_url_index in current_total_url_list:
         if current_url_index[0] in total_data_url_list:
-            print("{} has already exists".format(current_url_index))
+            print("{} has already exists".format(current_url_index[0]))
         else:
             try:
                 driver.get(current_url_index[0])
