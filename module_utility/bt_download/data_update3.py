@@ -20,6 +20,7 @@ def get_torrent_link(driver):
     driver.set_script_timeout(15)
     total_data_url_list = []
     current_total_url_list = []
+    total_data_dic = {}
     if not os.path.exists(pickle_url_data):
         print("Data file not exists!")
         return
@@ -49,7 +50,6 @@ def get_torrent_link(driver):
             # soup = bs.BeautifulSoup(requests.get(url).text, 'html.parser')
             torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
             if len(torrent_link) > 0 and len(torrent_link[0]) > len("http://www.rmdown.com"):
-                '''
                 if len(torrent_link[0].split("=")) > 1:
                     hash_value = torrent_link[0].split("=")[-1]
                     hash_value = hash_value[-40:]
@@ -57,8 +57,12 @@ def get_torrent_link(driver):
                     print(torrent_link[0])
                     print(torrent_link[1])
                     print(magnet_link)
-                '''
-                print(torrent_link[0])
+
+                    total_data_dic[torrent_link[0]] = [torrent_link[1], magnet_link]
+                    if len(total_data_dic) % 10 == 0:
+                        f_pickle = open(pickle_data, "wb")
+                        pickle.dump(total_data_dic, f_pickle)
+                        f_pickle.close()
             else:
                 print("Cant not find the torrent link for {}".format(current_url_index[0]))
 
