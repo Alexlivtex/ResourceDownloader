@@ -111,6 +111,13 @@ def main():
         print(len(total_list))
         f_pickle.close()
 
+    file_list = os.listdir(tmp_dir_name)
+    print("Before clean the file count is {}".format(len(file_list)))
+    for file_index in file_list:
+        if os.path.isdir(os.path.join(tmp_dir_name, file_index)):
+            shutil.rmtree(os.path.join(tmp_dir_name, file_index))
+    print("After clean the file count is {}".format(len(os.listdir(tmp_dir_name))))
+
     threads = []
     list_sub_dicts = list(dict_chunks(total_list, int(math.ceil(len(total_list) / max_thread_count))))
     for i in range(max_thread_count):
