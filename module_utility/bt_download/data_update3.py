@@ -54,11 +54,11 @@ def get_torrent_link(driver):
                     hash_value = torrent_link[0].split("=")[-1]
                     hash_value = hash_value[-40:]
                     magnet_link = "magnet:?xt=urn:btih:" + str(hash_value)
-                    print(torrent_link[0])
-                    print(torrent_link[1])
+                    print(current_url_index[0])
+                    print(current_url_index[1])
                     print(magnet_link)
 
-                    total_data_dic[torrent_link[0]] = [torrent_link[1], magnet_link]
+                    total_data_dic[current_url_index[0]] = [current_url_index[1], magnet_link]
                     if len(total_data_dic) % 10 == 0:
                         f_pickle = open(pickle_data, "wb")
                         pickle.dump(total_data_dic, f_pickle)
