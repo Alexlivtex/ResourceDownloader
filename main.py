@@ -68,6 +68,7 @@ def main():
     '''
 
     if download_times % 5 == 0:
+        '''
         # Get all the data link from the websites
         web_driver = webdriver.Firefox()
         try:
@@ -77,6 +78,7 @@ def main():
         web_driver.quit()
 
         time.sleep(5 * 60)
+        '''
 
         # Get all the data link from the websites
         web_driver = webdriver.Firefox()
