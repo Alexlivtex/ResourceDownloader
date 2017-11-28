@@ -69,12 +69,18 @@ def get_torrent_link(driver):
             torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
             if len(torrent_link) > 0 and len(torrent_link[0]) > len("http://www.rmdown.com"):
                 if len(torrent_link[0].split("=")) > 1:
-                    hash_value = torrent_link[0].split("=")[-1]
-                    hash_value = hash_value[-40:]
-                    magnet_link = "magnet:?xt=urn:btih:" + str(hash_value)
-                    print(current_url_index[0])
-                    print(current_url_index[1])
-                    print(magnet_link)
+                    try:
+                        hash_value = torrent_link[0].split("=")[-1]
+                        hash_value = hash_value[-40:]
+                        magnet_link = "magnet:?xt=urn:btih:" + str(hash_value)
+                        print(current_url_index[0])
+                        print(current_url_index[1])
+                        print(magnet_link)
+                    except:
+                        print("{} has a link format issue".format(current_url_index[0]))
+                        if not current_url_index[0] in total_error_list:
+                            total_error_list.append(current_url_index[0])
+                        continue
 
                     total_data_dic[current_url_index[0]] = [current_url_index[1], magnet_link]
                     if len(total_data_dic) % 10 == 0:
