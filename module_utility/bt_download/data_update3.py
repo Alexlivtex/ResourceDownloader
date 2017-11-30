@@ -152,9 +152,9 @@ def analysis_website(driver):
                 print("{} has some error in it!".format(item_link))
 
 
-'''
+
 web_driver = webdriver.Firefox()
-#analysis_website(web_driver)
-get_torrent_link(web_driver)
+analysis_website(web_driver)
+#get_torrent_link(web_driver)
 web_driver.quit()
-'''
+
