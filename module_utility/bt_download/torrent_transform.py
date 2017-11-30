@@ -14,12 +14,12 @@ from itertools import islice
 
 
 tmp_dir_name = os.path.join("file_local", "bt_download", "torrent_dir")
-pickle_torrent_parse_data = os.path.join("file_config", "bt_download", "data_total_torrent_parse.pickle")
+pickle_torrent_parse_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 
 finished_transform_list = []
 finished_transform_data = os.path.join("file_config", "bt_download", "finished_transform.pickle")
 
-max_thread_count = 5
+max_thread_count = 20
 
 
 def magnet2torrent(magnet, output_name=None):
