@@ -69,17 +69,11 @@ def main():
 
     if download_times % 6 == 0:
         # Get all the data link from the websites
-        while True:
-            try:
-                web_driver = webdriver.Firefox()
-                analysis_website(web_driver)
-                web_driver.quit()
-                break
-            except:
-                try:
-                    web_driver.quit()
-                except:
-                    print("Error happened when close the browser")
+        #
+            #try:
+        web_driver = webdriver.Firefox()
+        analysis_website(web_driver)
+        web_driver.quit()
 
         time.sleep(5 * 60)
 
