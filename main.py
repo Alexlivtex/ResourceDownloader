@@ -67,7 +67,7 @@ def main():
             continue
     '''
 
-    if download_times % 5 == 0:
+    if download_times % 500000000 == 0:
         # Get all the data link from the websites
         web_driver = webdriver.Firefox()
         try:
