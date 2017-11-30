@@ -69,27 +69,22 @@ def main():
 
     if download_times % 5 == 0:
         # Get all the data link from the websites
-        while True:
-            try:
-                web_driver = webdriver.Firefox()
-                analysis_website(web_driver)
-                web_driver.quit()
-                break
-            except:
-                web_driver.quit()
-
+        web_driver = webdriver.Firefox()
+        try:
+            analysis_website(web_driver)
+        except:
+            web_driver.quit()
+        web_driver.quit()
 
         time.sleep(5 * 60)
 
         # Get all the data link from the websites
-        while True:
-            try:
-                web_driver = webdriver.Firefox()
-                get_torrent_link(web_driver)
-                web_driver.quit()
-                break
-            except:
-                web_driver.quit()
+        web_driver = webdriver.Firefox()
+        try:
+            get_torrent_link(web_driver)
+        except:
+            web_driver.quit()
+        web_driver.quit()
 
         time.sleep(5 * 60)
 
