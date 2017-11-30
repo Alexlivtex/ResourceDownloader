@@ -14,9 +14,14 @@ login_url = "http://t66y.com/login.php"
 base_url = "http://t66y.com"
 
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
-pickle_torrent_parse_data = os.path.join("file_config", "bt_download", "data_total_torrent_parse.pickle")
+pickle_data_bak = os.path.join("file_config", "bt_download", "data_total_bak.pickle")
+
+
 pickle_url_data = os.path.join("file_config", "bt_download", "data_url_total.pickle")
+pickle_url_data_bak = os.path.join("file_config", "bt_download", "data_url_total_bak.pickle")
+
 pickle_error_data = os.path.join("file_config", "bt_download", "data_error_total.pickle")
+pickle_error_data_bak = os.path.join("file_config", "bt_download", "data_error_total_bak.pickle")
 
 def get_torrent_link(driver):
     driver.set_page_load_timeout(15)
@@ -42,14 +47,6 @@ def get_torrent_link(driver):
 
     if os.path.exists(pickle_data):
         check_data()
-        while True:
-            try:
-                shutil.copy(pickle_data, pickle_torrent_parse_data)
-                break
-            except:
-                print("Current not able to copy the file!")
-                time.sleep(10)
-
         f_total_data = open(pickle_data, "rb")
         total_data_dic = pickle.load(f_total_data)
         f_total_data.close()
@@ -87,6 +84,7 @@ def get_torrent_link(driver):
                         f_pickle = open(pickle_data, "wb")
                         pickle.dump(total_data_dic, f_pickle)
                         f_pickle.close()
+                        shutil.copy(pickle_data, pickle_data_bak)
             else:
                 print("Cant not find the torrent link for {}".format(current_url_index[0]))
                 if not current_url_index[0] in total_error_list:
@@ -95,6 +93,7 @@ def get_torrent_link(driver):
                         f_error = open(pickle_error_data, "wb")
                         pickle.dump(total_error_list, f_error)
                         f_error.close()
+                        shutil.copy(pickle_error_data, pickle_error_data_bak)
 
 
 def analysis_website(driver):
@@ -147,6 +146,7 @@ def analysis_website(driver):
                     f_pickle = open(pickle_url_data, "wb")
                     pickle.dump(total_url_list, f_pickle)
                     f_pickle.close()
+                    shutil.copy(pickle_url_data, pickle_url_data_bak)
 
             except:
                 print("{} has some error in it!".format(item_link))
