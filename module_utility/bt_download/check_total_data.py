@@ -2,14 +2,20 @@ import os
 import pickle
 
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
+pickle_data_bak = os.path.join("file_config", "bt_download", "data_total_bak.pickle")
 
 def check_data():
     total_dic_map = {}
     error_list = []
     if os.path.exists(pickle_data):
-        f_data_pickle = open(pickle_data, "rb")
-        total_dic_map = pickle.load(f_data_pickle)
-        f_data_pickle.close()
+        try:
+            f_data_pickle = open(pickle_data, "rb")
+            total_dic_map = pickle.load(f_data_pickle)
+            f_data_pickle.close()
+        except:
+            f_data_pickle = open(pickle_data_bak, "rb")
+            total_dic_map = pickle.load(f_data_pickle)
+            f_data_pickle.close()
     else:
         print("{} not exists!".format(pickle_data))
         return
