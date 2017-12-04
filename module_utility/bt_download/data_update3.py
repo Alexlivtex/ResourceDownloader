@@ -32,24 +32,39 @@ def get_torrent_link(driver):
     total_error_list = []
 
     if os.path.exists(pickle_error_data):
-        f_error = open(pickle_error_data, "rb")
-        total_error_list = pickle.load(f_error)
-        f_error.close()
+        try:
+            f_error = open(pickle_error_data, "rb")
+            total_error_list = pickle.load(f_error)
+            f_error.close()
+        except:
+            f_error = open(pickle_error_data_bak, "rb")
+            total_error_list = pickle.load(f_error)
+            f_error.close()
 
     if not os.path.exists(pickle_url_data):
         print("Data file not exists!")
         return
     else:
         print("Data file exists!")
-        f_current_url = open(pickle_url_data, "rb")
-        current_total_url_list = pickle.load(f_current_url)
-        f_current_url.close()
+        try:
+            f_current_url = open(pickle_url_data, "rb")
+            current_total_url_list = pickle.load(f_current_url)
+            f_current_url.close()
+        except:
+            f_current_url = open(pickle_url_data_bak, "rb")
+            current_total_url_list = pickle.load(f_current_url)
+            f_current_url.close()
 
     if os.path.exists(pickle_data):
         check_data()
-        f_total_data = open(pickle_data, "rb")
-        total_data_dic = pickle.load(f_total_data)
-        f_total_data.close()
+        try:
+            f_total_data = open(pickle_data, "rb")
+            total_data_dic = pickle.load(f_total_data)
+            f_total_data.close()
+        except:
+            f_total_data = open(pickle_data_bak, "rb")
+            total_data_dic = pickle.load(f_total_data)
+            f_total_data.close()
         for dic_index in total_data_dic:
             total_data_url_list.append(dic_index)
 
@@ -150,6 +165,7 @@ def analysis_website(driver):
 
             except:
                 print("{} has some error in it!".format(item_link))
+
 
 
 '''
