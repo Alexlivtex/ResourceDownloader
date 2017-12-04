@@ -132,3 +132,4 @@ while True:
         f_downloading.close()
     except:
         print("Unknown error happened! Continue to execute")
+        continue
