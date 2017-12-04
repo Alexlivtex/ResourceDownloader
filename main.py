@@ -118,14 +118,17 @@ def main():
             continue
 
 while True:
-    if os.path.exists(pickle_downloading_times):
-        f_downloading = open(pickle_downloading_times, "rb")
-        download_times = pickle.load(f_downloading)
+    try:
+        if os.path.exists(pickle_downloading_times):
+            f_downloading = open(pickle_downloading_times, "rb")
+            download_times = pickle.load(f_downloading)
+            f_downloading.close()
+
+        main()
+        download_times += 1
+
+        f_downloading = open(pickle_downloading_times, "wb")
+        pickle.dump(download_times, f_downloading)
         f_downloading.close()
-
-    main()
-    download_times += 1
-
-    f_downloading = open(pickle_downloading_times, "wb")
-    pickle.dump(download_times, f_downloading)
-    f_downloading.close()
+    except:
+        print("Unknown error happened! Continue to execute")
