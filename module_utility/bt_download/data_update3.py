@@ -130,9 +130,14 @@ def analysis_website(driver):
         elem_login.click()
 
     if os.path.exists(pickle_url_data):
-        f_data_pickle = open(pickle_url_data, "rb")
-        total_url_list = pickle.load(f_data_pickle)
-        f_data_pickle.close()
+        try:
+            f_data_pickle = open(pickle_url_data, "rb")
+            total_url_list = pickle.load(f_data_pickle)
+            f_data_pickle.close()
+        except:
+            f_data_pickle = open(pickle_url_data_bak, "rb")
+            total_url_list = pickle.load(f_data_pickle)
+            f_data_pickle.close()
 
 
     driver.set_script_timeout(5)
