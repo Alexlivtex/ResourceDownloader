@@ -132,4 +132,5 @@ while True:
         f_downloading.close()
     except:
         print("Unknown error happened! Continue to execute")
+        time.sleep(10*60)
         continue
