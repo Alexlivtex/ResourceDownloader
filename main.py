@@ -67,7 +67,7 @@ def main():
             continue
     '''
 
-    if download_times % 6 == 0:
+    if download_times % 50000 == 0:
         # Get all the data link from the websites
         while True:
             try:
