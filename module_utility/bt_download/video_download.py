@@ -88,14 +88,17 @@ def download_torrent(torrent_file, torrent_name):
         #format_custom_text.update_mapping(down=s.download_rate/1000, up=s.upload_rate/1000, used=(float(download_time)/float(18000))*100, finished=s.progress * 100)
         #bar.update(s.total_wanted_done)
 
-        if download_time > MAX_AMOUNT_TIME (s.progress * 100) < 90:
-            print("{} has spent too much time to download, quit it!".format(torrent_file))
-            f = open(failed_downloading_data, "wb")
-            failed_download_list.append(torrent_name)
-            pickle.dump(failed_download_list, f)
-            f.close()
-            shutil.rmtree(os.path.join(bt_download_dir, h.name()))
-            return
+        if download_time > MAX_AMOUNT_TIME:
+            if int(s.progress * 100) < 90:
+                print("{} has spent too much time to download, quit it!".format(torrent_file))
+                f = open(failed_downloading_data, "wb")
+                failed_download_list.append(torrent_name)
+                pickle.dump(failed_download_list, f)
+                f.close()
+                shutil.rmtree(os.path.join(bt_download_dir, h.name()))
+                return
+            else:
+                break
     print h.name(), 'complete'
     f = open(finished_downloading_data, "wb")
     finished_downloading_list.append(torrent_name)
