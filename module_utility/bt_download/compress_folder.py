@@ -1,7 +1,12 @@
+# encoding=utf8
 import pyminizip
 import os
 compression_level = 5
 import shutil
+import sys
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 def walk_file_path(path):
     file_list = []
