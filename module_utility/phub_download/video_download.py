@@ -8,18 +8,18 @@ import youtube_dl
 
 ydl_opts = {
     'format': 'bestaudio/best',
-    'outtmpl': os.path.join("file_download", "phub_download", "%(title)s")
+    'outtmpl': os.path.join("file_download", "phub_download", "%(title)s.%(ext)s")
 }
 
 MAX_DOWNLOAD_COUNT = 10
 
-pickle_data = os.path.join("file_config", "bt_download", "hub_hash_total.pickle")
-pickle_data_bak = os.path.join("file_config", "bt_download", "hub_hash_total_bak.pickle")
+pickle_data = os.path.join("file_config", "phub_download", "hub_hash_total.pickle")
+pickle_data_bak = os.path.join("file_config", "phub_download", "hub_hash_total_bak.pickle")
 
-pickle_finished = os.path.join("file_config", "bt_download", "hub_finished_download.pickle")
-pickle_finished_bak = os.path.join("file_config", "bt_download", "hub_finished_download_bak.pickle")
+pickle_finished = os.path.join("file_config", "phub_download", "hub_finished_download.pickle")
+pickle_finished_bak = os.path.join("file_config", "phub_download", "hub_finished_download_bak.pickle")
 
-start_url = os.path.join("file_config", "bt_download", "url_start_here")
+start_url = os.path.join("file_config", "phub_download", "url_start_here")
 
 total_hash_list = []
 
@@ -74,7 +74,10 @@ def begin_hub_download():
 
     for hash_index in total_hash_list:
         link = url_video_prefix + "viewkey=" + hash_index
-        if not link in finished_download_list and download_count < MAX_DOWNLOAD_COUNT:
+        if not link in finished_download_list:
+            if download_count > MAX_DOWNLOAD_COUNT:
+                break
+
             try:
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     ydl.download([link])
@@ -83,7 +86,6 @@ def begin_hub_download():
                 continue
             download_count += 1
             finished_download_list.append(link)
-
 
     f_finished = open(pickle_finished, "wb")
     pickle.dump(finished_download_list, f_finished)
