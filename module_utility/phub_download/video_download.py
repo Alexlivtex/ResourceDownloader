@@ -1,11 +1,23 @@
+from __future__ import unicode_literals
 import requests
 import bs4 as bs
 import os
 import pickle
 import shutil
+import youtube_dl
+
+ydl_opts = {
+    'format': 'bestaudio/best',
+    'outtmpl': os.path.join("file_download", "phub_download", "%(title)s")
+}
+
+MAX_DOWNLOAD_COUNT = 10
 
 pickle_data = os.path.join("file_config", "bt_download", "hub_hash_total.pickle")
 pickle_data_bak = os.path.join("file_config", "bt_download", "hub_hash_total_bak.pickle")
+
+pickle_finished = os.path.join("file_config", "bt_download", "hub_finished_download.pickle")
+pickle_finished_bak = os.path.join("file_config", "bt_download", "hub_finished_download_bak.pickle")
 
 start_url = os.path.join("file_config", "bt_download", "url_start_here")
 
@@ -31,6 +43,9 @@ def extract_link(url):
 def begin_hub_download():
     global total_hash_list
     url_video_prefix = ""
+    download_count = 0
+    finished_download_list = []
+
     if os.path.exists(pickle_data):
         try:
             f_hash_total = open(pickle_data, "rb")
@@ -47,6 +62,11 @@ def begin_hub_download():
             extract_link(url_line)
         f_url_list.close()
 
+    if os.path.exists(pickle_finished):
+        f_finished = open(pickle_finished, "rb")
+        finished_download_list = pickle.load(f_finished)
+        f_finished.close()
+
     f_url_list = open(start_url)
     url_lines = f_url_list.readlines()
     url_video_prefix = url_lines[0].split("viewkey=")[0]
@@ -54,7 +74,21 @@ def begin_hub_download():
 
     for hash_index in total_hash_list:
         link = url_video_prefix + "viewkey=" + hash_index
-        print(link)
+        if not link in finished_download_list and download_count < MAX_DOWNLOAD_COUNT:
+            try:
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([link])
+            except:
+                print("{} seems has an error in it".format(link))
+                continue
+            download_count += 1
+            finished_download_list.append(link)
+
+
+    f_finished = open(pickle_finished, "wb")
+    pickle.dump(finished_download_list, f_finished)
+    f_finished.close()
+    shutil.copy(pickle_finished, pickle_finished_bak)
 
 
 begin_hub_download()
