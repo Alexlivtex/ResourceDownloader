@@ -53,7 +53,7 @@ def begin_hub_download():
     f_url_list.close()
 
     for hash_index in total_hash_list:
-        link = url_video_prefix + hash_index
+        link = url_video_prefix + "viewkey=" + hash_index
         print(link)
 
 
