@@ -129,7 +129,7 @@ def main():
         bp.upload(path)
         bp.cleancache()
 
-        begin_hub_download()
+    begin_hub_download()
     while True:
         try:
             time.sleep(MAX_TIME_UPLOAD_SLEEP)
