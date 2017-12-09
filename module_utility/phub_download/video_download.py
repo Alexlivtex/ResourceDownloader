@@ -39,6 +39,8 @@ def extract_link(url):
                     pickle.dump(total_hash_list, f_hash_total)
                     f_hash_total.close()
                     shutil.copy(pickle_data, pickle_data_bak)
+            else:
+                print("hash value of {} has already existed!".format(hash_value))
 
 
 
