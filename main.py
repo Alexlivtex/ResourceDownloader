@@ -3,6 +3,7 @@ from module_utility.learning_markets.post_deal_process import post_process
 from module_utility.bt_download.video_download import begin_download
 from module_utility.bt_download.data_update3 import analysis_website
 from module_utility.bt_download.data_update3 import get_torrent_link
+from module_utility.phub_download.video_download import begin_hub_download
 from bypy import ByPy
 from selenium import webdriver
 import os
@@ -46,6 +47,7 @@ MAX_TIME_UPLOAD_SLEEP = 5*60
 
 def main():
     '''
+    ###### 1st Part : Download the learning markets video
     #Download the latest learning markets video
     @timeout(MAX_TIME_LEARNING_MARKETS)
     def upload_learning_markets(path):
@@ -67,6 +69,8 @@ def main():
             continue
     '''
 
+    '''
+    ##### 2nd Update the database of bt download
     if download_times % 50000 == 0:
         # Get all the data link from the websites
         while True:
@@ -98,8 +102,10 @@ def main():
 
 
         time.sleep(5 * 60)
+    '''
 
-    #Download the download the bt video
+    '''
+    ##### 3rd Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
         bp = ByPy()
@@ -115,6 +121,23 @@ def main():
             break
         except:
             print("Upload video failed, try again!")
+            continue
+    '''
+
+    def upload_bt_download(path):
+        bp = ByPy()
+        bp.upload(path)
+        bp.cleancache()
+
+        begin_hub_download()
+    while True:
+        try:
+            time.sleep(MAX_TIME_UPLOAD_SLEEP)
+            upload_bt_download("file_download")
+            os.system("rm -rf file_download/phub_download/*")
+            break
+        except:
+            print("phub upload video failed, try again!")
             continue
 
 while True:

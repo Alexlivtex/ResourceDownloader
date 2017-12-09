@@ -5,13 +5,15 @@ import os
 import pickle
 import shutil
 import youtube_dl
+import time
+from compress_folder import compress_folder
 
 ydl_opts = {
     'format': 'bestaudio/best',
-    'outtmpl': os.path.join("file_download", "phub_download", "%(title)s.%(ext)s")
+    'outtmpl': os.path.join("file_download", "phub_download", "download_dir", "%(title)s.%(ext)s")
 }
 
-MAX_DOWNLOAD_COUNT = 10
+MAX_DOWNLOAD_COUNT = 5
 
 pickle_data = os.path.join("file_config", "phub_download", "hub_hash_total.pickle")
 pickle_data_bak = os.path.join("file_config", "phub_download", "hub_hash_total_bak.pickle")
@@ -65,12 +67,21 @@ def begin_hub_download():
     if os.path.exists(pickle_finished):
         f_finished = open(pickle_finished, "rb")
         finished_download_list = pickle.load(f_finished)
+        for finished_index in finished_download_list:
+            try:
+                extract_link(finished_index)
+            except:
+                print("{} has some error when extract the link".format(finished_index))
+                continue
         f_finished.close()
 
     f_url_list = open(start_url)
     url_lines = f_url_list.readlines()
     url_video_prefix = url_lines[0].split("viewkey=")[0]
     f_url_list.close()
+
+    if not os.path.exists(os.path.join("file_download", "phub_download", "download_dir")):
+        os.mkdir(os.path.join("file_download", "phub_download", "download_dir"))
 
     for hash_index in total_hash_list:
         link = url_video_prefix + "viewkey=" + hash_index
@@ -92,7 +103,10 @@ def begin_hub_download():
     f_finished.close()
     shutil.copy(pickle_finished, pickle_finished_bak)
 
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    timestr = timestr + "-download-phub"
+    compress_folder(os.path.join("file_download", "phub_download", "download_dir"), os.path.join("file_download", "phub_download", timestr))
 
-begin_hub_download()
+#begin_hub_download()
 
 
