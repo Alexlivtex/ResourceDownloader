@@ -13,7 +13,7 @@ ydl_opts = {
     'outtmpl': os.path.join("file_download", "phub_download", "download_dir", "%(title)s.%(ext)s")
 }
 
-MAX_DOWNLOAD_COUNT = 5
+MAX_DOWNLOAD_COUNT = 30
 
 pickle_data = os.path.join("file_config", "phub_download", "hub_hash_total.pickle")
 pickle_data_bak = os.path.join("file_config", "phub_download", "hub_hash_total_bak.pickle")
