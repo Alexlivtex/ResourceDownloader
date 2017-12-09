@@ -104,26 +104,7 @@ def main():
         time.sleep(5 * 60)
     '''
 
-    '''
-    ##### 3rd Download the download the bt video
-    @timeout(MAX_TIME_BT_DOWNLOAD)
-    def upload_bt_download(path):
-        bp = ByPy()
-        bp.upload(path)
-        bp.cleancache()
-
-    begin_download()
-    while True:
-        try:
-            time.sleep(MAX_TIME_UPLOAD_SLEEP)
-            upload_bt_download("file_download")
-            os.system("rm -rf file_download/bt_download/download_dir/*")
-            break
-        except:
-            print("Upload video failed, try again!")
-            continue
-    '''
-
+    ##### 3th Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
         bp = ByPy()
@@ -140,6 +121,26 @@ def main():
         except:
             print("phub upload video failed, try again!")
             continue
+
+
+    ##### 4rd Download the download the bt video
+    @timeout(MAX_TIME_BT_DOWNLOAD)
+    def upload_bt_download(path):
+        bp = ByPy()
+        bp.upload(path)
+        bp.cleancache()
+
+    begin_download()
+    while True:
+        try:
+            time.sleep(MAX_TIME_UPLOAD_SLEEP)
+            upload_bt_download("file_download")
+            os.system("rm -rf file_download/bt_download/download_dir/*")
+            break
+        except:
+            print("Upload video failed, try again!")
+            continue
+
 
 while True:
     try:
