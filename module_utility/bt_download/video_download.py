@@ -95,7 +95,8 @@ def download_torrent(torrent_file, torrent_name):
                 failed_download_list.append(torrent_name)
                 pickle.dump(failed_download_list, f)
                 f.close()
-                shutil.rmtree(os.path.join(bt_download_dir, h.name()))
+                if os.path.exists(os.path.join(bt_download_dir, h.name())):
+                    shutil.rmtree(os.path.join(bt_download_dir, h.name()))
                 return
             else:
                 break
