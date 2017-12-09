@@ -124,6 +124,7 @@ def main():
             continue
     '''
 
+    @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
         bp = ByPy()
         bp.upload(path)
