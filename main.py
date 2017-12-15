@@ -7,6 +7,7 @@ from module_utility.phub_download.video_download import begin_hub_download
 from bypy import ByPy
 from selenium import webdriver
 import os
+import shutil
 
 from functools import wraps
 import errno
@@ -116,7 +117,9 @@ def main():
         try:
             time.sleep(MAX_TIME_UPLOAD_SLEEP)
             upload_bt_download("file_download")
-            os.system("rm -rf file_download/phub_download/*")
+            #os.system("rm -rf file_download/phub_download/*")
+            shutil.rmtree(os.path.join("file_download", "phub_download"))
+            os.mkdir(os.path.join("file_download", "phub_download"))
             break
         except:
             print("phub upload video failed, try again!")
