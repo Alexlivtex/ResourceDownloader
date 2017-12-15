@@ -67,8 +67,14 @@ def begin_hub_download():
         f_url_list.close()
 
     if os.path.exists(pickle_finished):
-        f_finished = open(pickle_finished, "rb")
-        finished_download_list = pickle.load(f_finished)
+        try:
+            f_finished = open(pickle_finished, "rb")
+            finished_download_list = pickle.load(f_finished)
+            f_finished.close()
+        except:
+            f_finished = open(pickle_finished_bak, "rb")
+            finished_download_list = pickle.load(f_finished)
+            f_finished.close()
         for finished_index in finished_download_list:
             try:
                 extract_link(finished_index)
