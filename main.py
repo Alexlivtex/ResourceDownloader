@@ -138,7 +138,9 @@ def main():
         try:
             time.sleep(MAX_TIME_UPLOAD_SLEEP)
             upload_bt_download("file_download")
-            os.system("rm -rf file_download/bt_download/download_dir/*")
+            #os.system("rm -rf file_download/bt_download/download_dir/*")
+            shutil.rmtree(os.path.join("file_download", "bt_download", "download_dir"))
+            os.mkdir(os.path.join("file_download", "bt_download", "download_dir"))
             break
         except:
             print("Upload video failed, try again!")
