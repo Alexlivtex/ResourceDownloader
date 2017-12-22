@@ -41,71 +41,12 @@ def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
 
     return decorator
 
-MAX_TIME_LEARNING_MARKETS = 15*60
 MAX_TIME_BT_DOWNLOAD = 15*60
 MAX_TIME_UPLOAD_SLEEP = 5*60
 
 
 def main():
-    '''
-    ###### 1st Part : Download the learning markets video
-    #Download the latest learning markets video
-    @timeout(MAX_TIME_LEARNING_MARKETS)
-    def upload_learning_markets(path):
-        bp = ByPy()
-        bp.upload(path)
-
-    try:
-        start_extract_learning_markets()
-    except:
-        print("Skip this function, got to the next one!")
-
-    while True:
-        try:
-            upload_learning_markets("file_download")
-            post_process()
-            break
-        except:
-            print("First try upload failed, try again!")
-            continue
-    '''
-
-    '''
-    ##### 2nd Update the database of bt download
-    if download_times % 50000 == 0:
-        # Get all the data link from the websites
-        while True:
-            try:
-                web_driver = webdriver.Firefox()
-                analysis_website(web_driver)
-                web_driver.quit()
-                break
-            except:
-                try:
-                    web_driver.quit()
-                except:
-                    print("Error happened when close the browser")
-
-        time.sleep(5 * 60)
-
-        # Get all the data link from the websites
-        while True:
-            try:
-                web_driver = webdriver.Firefox()
-                get_torrent_link(web_driver)
-                web_driver.quit()
-                break
-            except:
-                try:
-                    web_driver.quit()
-                except:
-                    print("Error happened when quit the driver")
-
-
-        time.sleep(5 * 60)
-    '''
-
-    ##### 3th Download the download the bt video
+    ##### 1st Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
         bp = ByPy()
@@ -126,7 +67,7 @@ def main():
             continue
 
 
-    ##### 4rd Download the download the bt video
+    ##### 2nd Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
         bp = ByPy()
@@ -149,17 +90,7 @@ def main():
 
 while True:
     try:
-        if os.path.exists(pickle_downloading_times):
-            f_downloading = open(pickle_downloading_times, "rb")
-            download_times = pickle.load(f_downloading)
-            f_downloading.close()
-
         main()
-        download_times += 1
-
-        f_downloading = open(pickle_downloading_times, "wb")
-        pickle.dump(download_times, f_downloading)
-        f_downloading.close()
     except:
         print("Unknown error happened! Continue to execute")
         time.sleep(10*60)
