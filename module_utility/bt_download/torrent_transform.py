@@ -19,7 +19,7 @@ pickle_torrent_parse_data = os.path.join("file_config", "bt_download", "data_tot
 finished_transform_list = []
 finished_transform_data = os.path.join("file_config", "bt_download", "finished_transform.pickle")
 
-max_thread_count = 20
+max_thread_count = 10
 
 
 def magnet2torrent(magnet, output_name=None):
@@ -103,7 +103,7 @@ def dict_chunks(total_dict, sub_count):
     for i in range(0, len(total_dict), sub_count):
         yield {k:total_dict[k] for k in islice(it, sub_count)}
 
-def main():
+def transform():
     total_list = {}
     if os.path.exists(pickle_torrent_parse_data):
         f_pickle = open(pickle_torrent_parse_data, "rb")
@@ -131,11 +131,3 @@ def main():
     for thread_index in threads:
         thread_index.join()
 
-while True:
-    try:
-        print("Begin to transform the torrent!")
-        main()
-    except:
-        print("Wait another period of time to keep on!")
-        time.sleep(100)
-        continue
