@@ -127,6 +127,7 @@ def analysis_website(driver):
         elem_user_name.send_keys("alexlivtex")
         elem_user_pasword.send_keys("heisenberg1987")
         elem_login = driver.find_element_by_name("submit")
+        time.sleep(4)
         elem_login.click()
 
     if os.path.exists(pickle_url_data):
@@ -143,6 +144,7 @@ def analysis_website(driver):
     driver.set_script_timeout(5)
     driver.set_page_load_timeout(5)
     for page_index in range(max_nocode_count):
+        time.sleep(3)
         url = base_no_code_url + str(page_index)
         try:
             driver.get(url)
