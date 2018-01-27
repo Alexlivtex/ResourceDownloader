@@ -4,6 +4,7 @@ from module_utility.bt_download.video_download import begin_download
 from module_utility.bt_download.data_update3 import analysis_website
 from module_utility.bt_download.data_update3 import get_torrent_link
 from module_utility.phub_download.video_download import begin_hub_download
+from module_utility.bt_download.torrent_transform import transform
 from bypy import ByPy
 from selenium import webdriver
 import os
@@ -46,7 +47,19 @@ MAX_TIME_UPLOAD_SLEEP = 5*60
 
 
 def main():
-    ##### 1st Download the download the bt video
+    #####1st Get the torrent link
+    options = webdriver.ChromeOptions()
+    options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
+    #driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
+    
+    analysis_website(driver)
+    get_torrent_link(driver)
+    driver.close()
+    transform()
+    
+    
+    ##### 2nd Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
         bp = ByPy()
@@ -67,7 +80,7 @@ def main():
             continue
 
 
-    ##### 2nd Download the download the bt video
+    ##### 3rd Download the download the bt video
     @timeout(MAX_TIME_BT_DOWNLOAD)
     def upload_bt_download(path):
         bp = ByPy()
