@@ -16,6 +16,7 @@ base_url = "http://t66y.com"
 pickle_data = os.path.join("file_config", "bt_download", "data_total.pickle")
 pickle_data_bak = os.path.join("file_config", "bt_download", "data_total_bak.pickle")
 
+CONFIG_JSON_PATH = os.path.join("file_config", "bt_download", "config.json")
 
 pickle_url_data = os.path.join("file_config", "bt_download", "data_url_total.pickle")
 pickle_url_data_bak = os.path.join("file_config", "bt_download", "data_url_total_bak.pickle")
@@ -122,8 +123,14 @@ def analysis_website(driver):
         time.sleep(30)
         return
     else:
-        elem_user_name = driver.find_element_by_name("pwuser")
-        elem_user_pasword = driver.find_element_by_name("pwpwd")
+        f_config = open(CONFIG_JSON_PATH)
+        config_data = json.load(f_config)
+        id = config_data["cl1024"][0]["id"]
+        passwd = config_data["cl1024"][0]["password"]
+        f_config.close()
+    
+        elem_user_name = driver.find_element_by_name("id")
+        elem_user_pasword = driver.find_element_by_name("passwd")
         elem_user_name.send_keys("alexlivtex")
         elem_user_pasword.send_keys("heisenberg1987")
         elem_login = driver.find_element_by_name("submit")
