@@ -1,0 +1,15 @@
+{
+    "cl1024":[
+        {
+            "password":"XXXXXXX",
+            "id":"XXXXXXX"
+        }
+    ],
+    "parameters":{
+        "id":"valore"
+    },
+    "masks":{
+        "id":"valore"
+    },
+    "operation_times":"0"
+}
