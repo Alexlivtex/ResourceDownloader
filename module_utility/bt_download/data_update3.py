@@ -129,10 +129,10 @@ def analysis_website(driver):
         passwd = config_data["cl1024"][0]["password"]
         f_config.close()
     
-        elem_user_name = driver.find_element_by_name("id")
-        elem_user_pasword = driver.find_element_by_name("passwd")
-        elem_user_name.send_keys("alexlivtex")
-        elem_user_pasword.send_keys("heisenberg1987")
+        elem_user_name = driver.find_element_by_name("pwuser")
+        elem_user_pasword = driver.find_element_by_name("pwpwd")
+        elem_user_name.send_keys("id")
+        elem_user_pasword.send_keys("passwd")
         elem_login = driver.find_element_by_name("submit")
         time.sleep(4)
         elem_login.click()
