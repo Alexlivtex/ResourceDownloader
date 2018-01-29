@@ -132,6 +132,7 @@ def analysis_website(driver):
     
         elem_user_name = driver.find_element_by_name("pwuser")
         elem_user_pasword = driver.find_element_by_name("pwpwd")
+        print("Use name is {} and password is {}".format(id, passwd))
         elem_user_name.send_keys("id")
         elem_user_pasword.send_keys("passwd")
         elem_login = driver.find_element_by_name("submit")
@@ -154,6 +155,7 @@ def analysis_website(driver):
     for page_index in range(max_nocode_count):
         #time.sleep(3)
         url = base_no_code_url + str(page_index)
+        print("Current id of the page is {}".format(page_index))
         #try:
         driver.get(url)
         #except:
