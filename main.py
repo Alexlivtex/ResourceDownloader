@@ -53,6 +53,8 @@ def main():
     driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
     #driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
     
+    driver.set_page_load_timeout(20)
+    driver.set_script_timeout(20)
     analysis_website(driver)
     get_torrent_link(driver)
     driver.close()
