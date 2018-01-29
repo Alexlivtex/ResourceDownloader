@@ -6,6 +6,7 @@ import os
 import re
 from check_total_data import check_data
 import shutil
+import json
 
 max_nocode_count = 2500
 
