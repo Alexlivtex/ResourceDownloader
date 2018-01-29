@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 import time
 import bs4 as bs
 import pickle
@@ -155,11 +156,35 @@ def analysis_website(driver):
         time.sleep(3)
         url = base_no_code_url + str(page_index)
         print("Current id of the page is {}".format(page_index))
-        #try:
-        driver.get(url)
-        #except:
-            #print("Execution time exceeded!")
-        #time.sleep(2)
+        try:
+            driver.get(url)
+        except TimeoutException as ex:
+            print("Exception has been thrown." + str(ex))
+            driver_pre = driver
+            driver_pre.close()
+
+            options = webdriver.ChromeOptions()
+            options.add_argument("--no-sandbox")
+            driver = webdriver.Chrome("/usr/bin/chromedriver", chrome_options=options)
+            #driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
+            driver.get(login_url)
+
+            f_config = open(CONFIG_JSON_PATH)
+            config_data = json.load(f_config)
+            id = config_data["cl1024"][0]["id"]
+            passwd = config_data["cl1024"][0]["password"]
+            f_config.close()
+
+            elem_user_name = driver.find_element_by_name("pwuser")
+            elem_user_pasword = driver.find_element_by_name("pwpwd")
+            elem_user_name.send_keys(id)
+            elem_user_pasword.send_keys(passwd)
+            elem_login = driver.find_element_by_name("submit")
+            time.sleep(4)
+            elem_login.click()
+
+            driver.get(url)   
+            
         page_list_content = bs.BeautifulSoup(driver.page_source).findAll("h3")
         for title_item in page_list_content:
             try:
