@@ -151,12 +151,12 @@ def analysis_website(driver):
     driver.set_script_timeout(5)
     driver.set_page_load_timeout(5)
     for page_index in range(max_nocode_count):
-        time.sleep(3)
+        #time.sleep(3)
         url = base_no_code_url + str(page_index)
-        try:
-            driver.get(url)
-        except:
-            print("Execution time exceeded!")
+        #try:
+        driver.get(url)
+        #except:
+            #print("Execution time exceeded!")
         #time.sleep(2)
         page_list_content = bs.BeautifulSoup(driver.page_source).findAll("h3")
         for title_item in page_list_content:
