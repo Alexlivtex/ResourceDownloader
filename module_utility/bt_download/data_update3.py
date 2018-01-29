@@ -152,7 +152,7 @@ def analysis_website(driver):
     driver.set_script_timeout(5)
     driver.set_page_load_timeout(5)
     for page_index in range(max_nocode_count):
-        #time.sleep(3)
+        time.sleep(3)
         url = base_no_code_url + str(page_index)
         print("Current id of the page is {}".format(page_index))
         #try:
