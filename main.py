@@ -101,10 +101,10 @@ def main():
             continue
 
 
-while True:
-    try:
-        main()
-    except:
-        print("Unknown error happened! Continue to execute")
-        time.sleep(10*60)
-        continue
+#while True:
+#    try:
+main()
+#    except:
+#        print("Unknown error happened! Continue to execute")
+#        time.sleep(10*60)
+#        continue
