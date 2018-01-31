@@ -34,6 +34,8 @@ def get_torrent_link(driver):
     current_total_url_list = []
     total_data_dic = {}
     total_error_list = []
+    
+    soup = None
 
     if os.path.exists(pickle_error_data):
         try:
