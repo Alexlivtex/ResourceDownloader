@@ -34,7 +34,6 @@ def get_torrent_link(driver):
     current_total_url_list = []
     total_data_dic = {}
     total_error_list = []
-    
     soup = None
 
     if os.path.exists(pickle_error_data):
@@ -80,6 +79,7 @@ def get_torrent_link(driver):
         else:
             try:
                 driver.get(current_url_index[0])
+                soup = bs.BeautifulSoup(driver.page_source, "lxml")
             except TimeoutException as ex:
                 try:
                     soup = bs.BeautifulSoup(driver.page_source, "lxml")
