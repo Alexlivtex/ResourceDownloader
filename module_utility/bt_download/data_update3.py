@@ -77,8 +77,32 @@ def get_torrent_link(driver):
         else:
             try:
                 driver.get(current_url_index[0])
-            except:
-                print("Time exceed when loading the page")
+            except TimeoutException as ex:
+                print("Exception has been thrown." + str(ex))
+                driver_pre = driver
+                driver_pre.close()
+
+                options = webdriver.ChromeOptions()
+                options.add_argument("--no-sandbox")
+                driver = webdriver.Chrome("/usr/bin/chromedriver", chrome_options=options)
+                # driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
+                driver.get(login_url)
+
+                f_config = open(CONFIG_JSON_PATH)
+                config_data = json.load(f_config)
+                id = config_data["cl1024"][0]["id"]
+                passwd = config_data["cl1024"][0]["password"]
+                f_config.close()
+
+                elem_user_name = driver.find_element_by_name("pwuser")
+                elem_user_pasword = driver.find_element_by_name("pwpwd")
+                elem_user_name.send_keys(id)
+                elem_user_pasword.send_keys(passwd)
+                elem_login = driver.find_element_by_name("submit")
+                time.sleep(4)
+                elem_login.click()
+
+                driver.get(current_url_index[0])
             soup = bs.BeautifulSoup(driver.page_source, "lxml")
             # soup = bs.BeautifulSoup(requests.get(url).text, 'html.parser')
             torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
@@ -112,7 +136,10 @@ def get_torrent_link(driver):
                         pickle.dump(total_error_list, f_error)
                         f_error.close()
                         shutil.copy(pickle_error_data, pickle_error_data_bak)
-
+    try:
+        driver.close()
+    except:
+        print("Session has already closed")
 
 def analysis_website(driver):
     total_url_list = []
@@ -207,7 +234,10 @@ def analysis_website(driver):
             except:
                 print("{} has some error in it!".format(item_link))
 
-
+    try:
+        driver.close()
+    except:
+        print("Session has already closed")
 
 '''
 web_driver = webdriver.Firefox()
