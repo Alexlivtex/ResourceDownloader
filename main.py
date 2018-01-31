@@ -50,12 +50,24 @@ def main():
     #####1st Get the torrent link
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")
+
+
     driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
     #driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
-    
-    analysis_website(driver)
+    #analysis_website(driver)
+    try:
+        driver.close()
+    except:
+        print("Session has already released")
+
+    time.sleep(30)
+    driver = webdriver.Chrome("/usr/bin/chromedriver", chrome_options=options)
     get_torrent_link(driver)
-    driver.close()
+    try:
+        driver.close()
+    except:
+        print("Session has already released")
+
     transform()
     
     
