@@ -77,7 +77,7 @@ def get_torrent_link():
             print("{} has already exists".format(current_url_index[0]))
         else:
             print("Current target url is {}".format(current_url_index[0]))
-            soup = bs.BeautifulSoup(requests.get(current_url_index[0], timeout=120).text, 'html.parser')
+            soup = bs.BeautifulSoup(requests.get(current_url_index[0]).text, 'html.parser')
             torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
             if len(torrent_link) > 0 and len(torrent_link[0]) > len("http://www.rmdown.com"):
                 if len(torrent_link[0].split("=")) > 1:
