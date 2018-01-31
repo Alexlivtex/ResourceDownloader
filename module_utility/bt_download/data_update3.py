@@ -8,6 +8,7 @@ import re
 from check_total_data import check_data
 import shutil
 import json
+import sys
 
 max_nocode_count = 2500
 
@@ -78,7 +79,12 @@ def get_torrent_link(driver):
             try:
                 driver.get(current_url_index[0])
             except TimeoutException as ex:
-                print("Exception has been thrown." + str(ex))
+                driver.execute_script("window.stop();")
+
+            try:
+                soup = bs.BeautifulSoup(driver.page_source, "lxml")
+            except:
+                print("Exception error : {}".format(sys.exc_info()[0]))
                 driver_pre = driver
                 driver_pre.close()
 
@@ -106,9 +112,13 @@ def get_torrent_link(driver):
                 try:
                     driver.get(current_url_index[0])
                 except TimeoutException as ex:
-                    print("Page wasted too much time to load, exist it")
-                    continue
-            soup = bs.BeautifulSoup(driver.page_source, "lxml")
+                    driver.execute_script("window.stop();")
+                    try:
+                        soup = bs.BeautifulSoup(driver.page_source, "lxml")
+                    except:
+                        print("Exception error second time : {}".format(sys.exc_info()[0]))
+                        continue
+
             # soup = bs.BeautifulSoup(requests.get(url).text, 'html.parser')
             torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
             if len(torrent_link) > 0 and len(torrent_link[0]) > len("http://www.rmdown.com"):
