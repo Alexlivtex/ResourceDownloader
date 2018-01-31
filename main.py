@@ -2,7 +2,7 @@ from module_utility.learning_markets.video_download import start_extract_learnin
 from module_utility.learning_markets.post_deal_process import post_process
 from module_utility.bt_download.video_download import begin_download
 from module_utility.bt_download.data_update3 import analysis_website
-from module_utility.bt_download.data_update3 import get_torrent_link
+from module_utility.bt_download.data_update4 import get_torrent_link
 from module_utility.phub_download.video_download import begin_hub_download
 from module_utility.bt_download.torrent_transform import transform
 from bypy import ByPy
@@ -60,13 +60,8 @@ def main():
     except:
         print("Session has already released")
 
-    time.sleep(30)
-    driver = webdriver.Chrome("/usr/bin/chromedriver", chrome_options=options)
-    get_torrent_link(driver)
-    try:
-        driver.close()
-    except:
-        print("Session has already released")
+
+    get_torrent_link()
 
     transform()
     
