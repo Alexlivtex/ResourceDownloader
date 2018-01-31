@@ -8,7 +8,8 @@ import re
 from check_total_data import check_data
 import shutil
 import json
-import sys
+import requests
+
 
 max_nocode_count = 2500
 
@@ -76,7 +77,38 @@ def get_torrent_link():
             print("{} has already exists".format(current_url_index[0]))
         else:
             print("Current target url is {}".format(current_url_index[0]))
+            soup = bs.BeautifulSoup(requests.get(current_url_index[0]).text, 'html.parser')
+            torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
+            if len(torrent_link) > 0 and len(torrent_link[0]) > len("http://www.rmdown.com"):
+                if len(torrent_link[0].split("=")) > 1:
+                    try:
+                        hash_value = torrent_link[0].split("=")[-1]
+                        hash_value = hash_value[-40:]
+                        magnet_link = "magnet:?xt=urn:btih:" + str(hash_value)
+                        print(current_url_index[0])
+                        print(current_url_index[1])
+                        print(magnet_link)
+                    except:
+                        print("{} has a link format issue".format(current_url_index[0]))
+                        if not current_url_index[0] in total_error_list:
+                            total_error_list.append(current_url_index[0])
+                        continue
 
+                    total_data_dic[current_url_index[0]] = [current_url_index[1], magnet_link]
+                    if len(total_data_dic) % 10 == 0:
+                        f_pickle = open(pickle_data, "wb")
+                        pickle.dump(total_data_dic, f_pickle)
+                        f_pickle.close()
+                        shutil.copy(pickle_data, pickle_data_bak)
+            else:
+                print("Cant not find the torrent link for {}".format(current_url_index[0]))
+                if not current_url_index[0] in total_error_list:
+                    total_error_list.append(current_url_index[0])
+                    if len(total_error_list) % 10 == 0:
+                        f_error = open(pickle_error_data, "wb")
+                        pickle.dump(total_error_list, f_error)
+                        f_error.close()
+                        shutil.copy(pickle_error_data, pickle_error_data_bak)
 
 def analysis_website(driver):
     total_url_list = []
