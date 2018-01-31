@@ -27,8 +27,8 @@ pickle_error_data = os.path.join("file_config", "bt_download", "data_error_total
 pickle_error_data_bak = os.path.join("file_config", "bt_download", "data_error_total_bak.pickle")
 
 def get_torrent_link(driver):
-    driver.set_page_load_timeout(15)
-    driver.set_script_timeout(15)
+    driver.set_page_load_timeout(120)
+    driver.set_script_timeout(120)
     total_data_url_list = []
     current_total_url_list = []
     total_data_dic = {}
@@ -101,8 +101,11 @@ def get_torrent_link(driver):
                 elem_login = driver.find_element_by_name("submit")
                 time.sleep(4)
                 elem_login.click()
-
-                driver.get(current_url_index[0])
+                try:
+                    driver.get(current_url_index[0])
+                except TimeoutException as ex:
+                    print("Page wasted too much time to load, exist it")
+                    continue
             soup = bs.BeautifulSoup(driver.page_source, "lxml")
             # soup = bs.BeautifulSoup(requests.get(url).text, 'html.parser')
             torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
