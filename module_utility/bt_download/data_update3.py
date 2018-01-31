@@ -27,8 +27,8 @@ pickle_error_data = os.path.join("file_config", "bt_download", "data_error_total
 pickle_error_data_bak = os.path.join("file_config", "bt_download", "data_error_total_bak.pickle")
 
 def get_torrent_link(driver):
-    driver.set_page_load_timeout(120)
-    driver.set_script_timeout(120)
+    driver.set_page_load_timeout(20)
+    driver.set_script_timeout(20)
     total_data_url_list = []
     current_total_url_list = []
     total_data_dic = {}
