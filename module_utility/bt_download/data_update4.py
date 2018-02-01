@@ -11,7 +11,7 @@ import json
 import requests
 
 
-max_nocode_count = 2500
+max_nocode_count = 2600
 
 base_no_code_url = "http://t66y.com/thread0806.php?fid=2&search=&page="
 login_url = "http://t66y.com/login.php"
