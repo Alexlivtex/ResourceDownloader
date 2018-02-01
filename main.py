@@ -1,7 +1,7 @@
 from module_utility.learning_markets.video_download import start_extract_learning_markets
 from module_utility.learning_markets.post_deal_process import post_process
 from module_utility.bt_download.video_download import begin_download
-from module_utility.bt_download.data_update3 import analysis_website
+from module_utility.bt_download.data_update4 import analysis_website
 from module_utility.bt_download.data_update4 import get_torrent_link
 from module_utility.phub_download.video_download import begin_hub_download
 from module_utility.bt_download.torrent_transform import transform
@@ -54,7 +54,7 @@ def main():
 
     driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
     #driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
-    #analysis_website(driver)
+    analysis_website(driver)
     try:
         driver.close()
     except:
