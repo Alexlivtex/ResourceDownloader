@@ -78,7 +78,7 @@ def get_torrent_link():
         else:
             print("Current target url is {}".format(current_url_index[0]))
             try:
-                soup = bs.BeautifulSoup(requests.get(current_url_index[0]).text, 'html.parser')
+                soup = bs.BeautifulSoup(requests.get(current_url_index[0], timeout=50).text, 'html.parser')
                 torrent_link = soup.body.findAll(text=re.compile('^http://www.rmdown.com'))
             except:
                 print("Requests get page source failed!")
@@ -106,6 +106,13 @@ def get_torrent_link():
                         f_pickle.close()
                         shutil.copy(pickle_data, pickle_data_bak)
             else:
+                pagesource = requests.get(current_url_index[0]).text
+                soup = bs.BeautifulSoup(pagesource, 'html.parser')
+                for a in soup.find_all('a', href=True):
+                    if "hash=" in a['href']:
+                        sub_soup = bs.BeautifulSoup(requests.get(a['href']).text, 'html.parser')
+                        torrent_link = sub_soup.text[sub_soup.text.find("(") + 1: sub_soup.text.rfind(")") - 1].strip()
+
                 print("Cant not find the torrent link for {}".format(current_url_index[0]))
                 if not current_url_index[0] in total_error_list:
                     total_error_list.append(current_url_index[0])

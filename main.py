@@ -54,7 +54,7 @@ def main():
 
     driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
     #driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
-    analysis_website(driver)
+    #analysis_website(driver)
     try:
         driver.close()
     except:
