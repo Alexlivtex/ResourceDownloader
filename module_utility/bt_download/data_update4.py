@@ -231,6 +231,7 @@ def process_invalid_page(page_address):
             print(torrent_link)
             hasv_value = torrent_link[torrent_link.find("=") + 1:]
             print(hasv_value)
+
 '''
 web_driver = webdriver.Firefox()
 analysis_website(web_driver)
