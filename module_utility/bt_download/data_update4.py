@@ -221,6 +221,16 @@ def analysis_website(driver):
         print("Session has already closed")
 
 
+def process_invalid_page(page_address):
+    pagesource = requests.get(page_address).text
+    soup = bs.BeautifulSoup(pagesource, 'html.parser')
+    for a in soup.find_all('a', href=True):
+        if "hash=" in a['href']:
+            sub_soup = bs.BeautifulSoup(requests.get(a['href']).text, 'html.parser')
+            torrent_link = sub_soup.text[sub_soup.text.find("(") + 1: sub_soup.text.rfind(")") - 1].strip()
+            print(torrent_link)
+            hasv_value = torrent_link[torrent_link.find("=") + 1:]
+            print(hasv_value)
 '''
 web_driver = webdriver.Firefox()
 analysis_website(web_driver)
