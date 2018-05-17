@@ -1,3 +1,4 @@
+
 from selenium import webdriver
 import time
 import bs4 as bs
@@ -110,4 +111,3 @@ try:
     web_driver.quit()
 except:
     web_driver.quit()
-
