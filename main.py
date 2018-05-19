@@ -4,6 +4,7 @@ import platform
 from selenium import webdriver
 
 from module_utility.source_extract.cl_extract import extract_source_asis_nocode
+from module_utility.source_extract.cl_extract import analyze_link
 
 CONFIG_FILE = os.path.join("file_config", "config.json")
 CL_1024_PATH = os.path.join("file_config", "cl_1024")
@@ -30,7 +31,8 @@ def main():
         options.add_argument("--no-sandbox")
         driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
 
-    extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
+    #extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
+    analyze_link(CL_1024_PATH, driver)
 
 
 

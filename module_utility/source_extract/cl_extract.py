@@ -5,6 +5,9 @@ import sys
 import pickle
 import os
 import shutil
+import threading
+
+from selenium.common.exceptions import TimeoutException
 
 TOTAL_NOCODE_PICKLE = "nocode.pickle"
 TOTAL_NOCODE_PICKLE_BAK = "nocode_bak.pickle"
@@ -28,6 +31,38 @@ section_map = {"NOCODE_ASIA" : 2,
                "DAGGLE" : 16,
                "LITERATUAL" : 20
                }
+
+def analyze_link(config_path, driver):
+    global TOTAL_NOCODE_DIC
+
+    with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "rb") as f:
+        TOTAL_NOCODE_DIC = pickle.load(f)
+
+    for item_index in TOTAL_NOCODE_DIC:
+        sys.stdout.flush()
+        driver.get(item_index)
+        page_source = str(driver.page_source)
+        #print(page_source)
+        print("-" * 150)
+        print(item_index)
+        start_index = page_source.rfind("rmdown.com")
+        end_index = start_index
+        print(start_index)
+        while True:
+            if(page_source[start_index] == ">"):
+                start_index += 1
+                break
+            start_index -= 1
+        while True:
+            if(page_source[end_index] == "<"):
+                break
+            end_index += 1
+        print(start_index)
+        print(end_index)
+        print(page_source[start_index : end_index])
+        print("*" * 150)
+
+
 
 def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     global  TOTAL_NOCODE_DIC
