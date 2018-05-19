@@ -108,6 +108,9 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     global  TOTAL_NOCODE_DIC
     global TOTAL_ERROR_LIST
     login_url = "http://t66y.com/login.php"
+
+    driver.set_page_load_timeout(50)
+    driver.set_script_timeout(50)
     driver.get(login_url)
 
     elem_user_name = driver.find_element_by_name("pwuser")
