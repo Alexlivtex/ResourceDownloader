@@ -20,6 +20,7 @@ if platform.system() == "Windows":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
 else:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.setrecursionlimit(10000000)
 
 section_map = {"NOCODE_ASIA" : 2,
                "CODE_ASIA" : 15,
