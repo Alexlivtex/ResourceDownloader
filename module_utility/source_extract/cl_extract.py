@@ -15,6 +15,8 @@ TOTAL_NOCODE_DIC = {}
 
 if platform.system() == "Windows":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
+else:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 section_map = {"NOCODE_ASIA" : 2,
                "CODE_ASIA" : 15,
