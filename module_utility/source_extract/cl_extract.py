@@ -118,6 +118,10 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     if os.path.exists(os.path.join(data_path, TOTAL_NOCODE_PICKLE)):
         with open(os.path.join(data_path, TOTAL_NOCODE_PICKLE), "rb") as f:
             TOTAL_NOCODE_DIC = pickle.load(f)
+    else:
+        f = open(os.path.join(data_path, TOTAL_NOCODE_PICKLE), "wb")
+        pickle.dump(TOTAL_NOCODE_DIC, f)
+        f.close()
 
     for index in range(1, int(total_page_count)):
         time.sleep(1)
