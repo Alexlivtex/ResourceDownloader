@@ -11,7 +11,10 @@ import platform
 TOTAL_NOCODE_PICKLE = "nocode.pickle"
 TOTAL_NOCODE_PICKLE_BAK = "nocode_bak.pickle"
 
+TOTAL_NOCODE_ERROR = "nocode_error.pickle"
+
 TOTAL_NOCODE_DIC = {}
+TOTAL_ERROR_LIST = []
 
 if platform.system() == "Windows":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
@@ -102,6 +105,7 @@ def analyze_link(config_path, driver):
 
 def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     global  TOTAL_NOCODE_DIC
+    global TOTAL_ERROR_LIST
     login_url = "http://t66y.com/login.php"
     driver.get(login_url)
 
@@ -127,6 +131,10 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
         pickle.dump(TOTAL_NOCODE_DIC, f)
         f.close()
 
+    if os.path.exists(os.path.join(data_path, TOTAL_NOCODE_ERROR)):
+        with open(os.path.join(data_path, TOTAL_NOCODE_ERROR), "rb") as f:
+            TOTAL_ERROR_LIST = pickle.load(f)
+
     for index in range(1, int(total_page_count)):
         time.sleep(1)
         complete_url = url + "/thread0806.php?fid=" + str(section_map["NOCODE_ASIA"]) + "&search=&page=" + str(index)
@@ -136,12 +144,20 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
             continue
         soup = bs.BeautifulSoup(driver.page_source, "lxml")
         for sub_item in soup.findAll("h3"):
+            if len(sub_item.findAll('a')) == 0:
+                TOTAL_ERROR_LIST.append(sub_item)
+                with open(os.path.join(os.path.join(data_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                    pickle.dump(TOTAL_ERROR_LIST, f)
+                continue
             link = sub_item.findAll('a')[0]
             title = link.text
             try:
                 full_link = "/".join(login_url.split('/')[:-1]) + '/' + link["href"]
             except:
                 print(link)
+                TOTAL_ERROR_LIST.append(sub_item)
+                with open(os.path.join(os.path.join(data_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                    pickle.dump(TOTAL_ERROR_LIST, f)
                 continue
             #print("-" * 100)
             if full_link in TOTAL_NOCODE_DIC:
