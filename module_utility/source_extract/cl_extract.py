@@ -138,7 +138,11 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
         for sub_item in soup.findAll("h3"):
             link = sub_item.findAll('a')[0]
             title = link.text
-            full_link = "/".join(login_url.split('/')[:-1]) + '/' + link["href"]
+            try:
+                full_link = "/".join(login_url.split('/')[:-1]) + '/' + link["href"]
+            except:
+                print(link)
+                continue
             #print("-" * 100)
             if full_link in TOTAL_NOCODE_DIC:
                 print("{} has already exixts".format(full_link))
