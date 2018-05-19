@@ -14,7 +14,6 @@ TOTAL_NOCODE_PICKLE_BAK = "nocode_bak.pickle"
 TOTAL_NOCODE_ERROR = "nocode_error.pickle"
 
 TOTAL_NOCODE_DIC = {}
-TOTAL_ERROR_LIST = []
 
 if platform.system() == "Windows":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
@@ -40,6 +39,11 @@ section_map = {"NOCODE_ASIA" : 2,
 
 def analyze_link(config_path, driver):
     global TOTAL_NOCODE_DIC
+    TOTAL_ERROR_LIST = []
+
+    if os.path.exists(os.path.join(config_path, TOTAL_NOCODE_ERROR)):
+        with open(os.path.join(config_path, TOTAL_NOCODE_ERROR), "rb") as f:
+            TOTAL_ERROR_LIST = pickle.load(f)
 
     loop_counter = 1
     for item_index in TOTAL_NOCODE_DIC:
@@ -47,12 +51,20 @@ def analyze_link(config_path, driver):
         try:
             driver.get(item_index)
         except:
+            TOTAL_ERROR_LIST.append(item_index)
+            with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                pickle.dump(TOTAL_ERROR_LIST, f)
             continue
         page_source = str(driver.page_source)
         #print(page_source)
         print("-" * 150)
         print(item_index)
         start_index = page_source.rfind("rmdown.com")
+        if start_index < 0:
+            TOTAL_ERROR_LIST.append(item_index)
+            with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                pickle.dump(TOTAL_ERROR_LIST, f)
+            continue
         end_index = start_index
         print(start_index)
         while True:
@@ -69,10 +81,18 @@ def analyze_link(config_path, driver):
         try:
             driver.get(torrent_link)
         except:
+            TOTAL_ERROR_LIST.append(item_index)
+            with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                pickle.dump(TOTAL_ERROR_LIST, f)
             continue
         torrent_link_source = str(driver.page_source)
 
         start_index = torrent_link_source.find("Downloaded")
+        if start_index < 0:
+            TOTAL_ERROR_LIST.append(item_index)
+            with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                pickle.dump(TOTAL_ERROR_LIST, f)
+            continue
 
         while True:
             if torrent_link_source[start_index].isdigit():
@@ -106,7 +126,7 @@ def analyze_link(config_path, driver):
 
 def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     global  TOTAL_NOCODE_DIC
-    global TOTAL_ERROR_LIST
+    TOTAL_ERROR_LIST = []
     login_url = "http://t66y.com/login.php"
 
     driver.set_page_load_timeout(50)
