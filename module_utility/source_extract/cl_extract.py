@@ -148,7 +148,8 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
                 continue
 
             print("link : {}".format(full_link))
-            print("Title : {}".format(title))
+            if platform.system() == "Windows":
+                print("Title : {}".format(title))
 
             item = {"Title" : title, "TorrentLink" : "", "DownloadingCount" : 0}
             TOTAL_NOCODE_DIC[full_link] = item
