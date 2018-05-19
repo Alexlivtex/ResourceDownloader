@@ -6,13 +6,17 @@ import pickle
 import os
 import shutil
 import threading
+import platform
 
 TOTAL_NOCODE_PICKLE = "nocode.pickle"
 TOTAL_NOCODE_PICKLE_BAK = "nocode_bak.pickle"
 
 TOTAL_NOCODE_DIC = {}
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
+if platform.system() == "Windows":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
+else:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 section_map = {"NOCODE_ASIA" : 2,
                "CODE_ASIA" : 15,
