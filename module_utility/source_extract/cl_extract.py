@@ -153,5 +153,5 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
             if len(TOTAL_NOCODE_DIC) % 30 == 0:
                 shutil.copy(os.path.join(data_path, TOTAL_NOCODE_PICKLE), os.path.join(data_path, TOTAL_NOCODE_PICKLE_BAK))
 
-        analyze_link(data_path ,driver)
+    analyze_link(data_path ,driver)
 
