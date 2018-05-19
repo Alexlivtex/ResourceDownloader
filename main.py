@@ -31,8 +31,8 @@ def main():
         options.add_argument("--no-sandbox")
         driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
 
-    #extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
-    analyze_link(CL_1024_PATH, driver)
+    extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
+    #analyze_link(CL_1024_PATH, driver)
 
 
 

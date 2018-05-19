@@ -7,8 +7,6 @@ import os
 import shutil
 import threading
 
-from selenium.common.exceptions import TimeoutException
-
 TOTAL_NOCODE_PICKLE = "nocode.pickle"
 TOTAL_NOCODE_PICKLE_BAK = "nocode_bak.pickle"
 
@@ -35,12 +33,13 @@ section_map = {"NOCODE_ASIA" : 2,
 def analyze_link(config_path, driver):
     global TOTAL_NOCODE_DIC
 
-    with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "rb") as f:
-        TOTAL_NOCODE_DIC = pickle.load(f)
-
+    loop_counter = 1
     for item_index in TOTAL_NOCODE_DIC:
         sys.stdout.flush()
-        driver.get(item_index)
+        try:
+            driver.get(item_index)
+        except:
+            continue
         page_source = str(driver.page_source)
         #print(page_source)
         print("-" * 150)
@@ -57,12 +56,45 @@ def analyze_link(config_path, driver):
             if(page_source[end_index] == "<"):
                 break
             end_index += 1
-        print(start_index)
-        print(end_index)
-        print(page_source[start_index : end_index])
+        torrent_link = page_source[start_index : end_index]
+
+        try:
+            driver.get(torrent_link)
+        except:
+            continue
+        torrent_link_source = str(driver.page_source)
+
+        start_index = torrent_link_source.find("Downloaded")
+
+        while True:
+            if torrent_link_source[start_index].isdigit():
+                break
+            start_index += 1
+
+        end_index = start_index
+        while True:
+            if not torrent_link_source[end_index].isdigit():
+                break
+            end_index += 1
+
+        if "hash" not in torrent_link:
+            download_count = 0
+        else:
+            download_count = int(torrent_link_source[start_index:end_index].strip())
+        print("Torrent link : {}".format(torrent_link))
+        print("Downloaded count : {}".format(download_count))
         print("*" * 150)
+        TOTAL_NOCODE_DIC[item_index]["TorrentLink"] = torrent_link
+        TOTAL_NOCODE_DIC[item_index]["DownloadingCount"] = download_count
 
+        if loop_counter % 10 == 0:
+            with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "wb") as f:
+                pickle.dump(TOTAL_NOCODE_DIC, f)
 
+        if loop_counter % 30 == 0:
+            shutil.copy(os.path.join(config_path, TOTAL_NOCODE_PICKLE), os.path.join(config_path, TOTAL_NOCODE_PICKLE_BAK))
+
+        loop_counter += 1
 
 def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     global  TOTAL_NOCODE_DIC
@@ -90,7 +122,10 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     for index in range(1, int(total_page_count)):
         time.sleep(1)
         complete_url = url + "/thread0806.php?fid=" + str(section_map["NOCODE_ASIA"]) + "&search=&page=" + str(index)
-        driver.get(complete_url)
+        try:
+            driver.get(complete_url)
+        except:
+            continue
         soup = bs.BeautifulSoup(driver.page_source, "lxml")
         for sub_item in soup.findAll("h3"):
             link = sub_item.findAll('a')[0]
@@ -117,4 +152,6 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
 
             if len(TOTAL_NOCODE_DIC) % 30 == 0:
                 shutil.copy(os.path.join(data_path, TOTAL_NOCODE_PICKLE), os.path.join(data_path, TOTAL_NOCODE_PICKLE_BAK))
+
+        analyze_link(data_path ,driver)
 
