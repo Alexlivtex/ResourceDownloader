@@ -7,6 +7,7 @@ import os
 import shutil
 import threading
 import platform
+import requests
 
 TOTAL_NOCODE_PICKLE = "nocode.pickle"
 TOTAL_NOCODE_PICKLE_BAK = "nocode_bak.pickle"
@@ -41,8 +42,9 @@ def analyze_link(config_path, driver):
     global TOTAL_NOCODE_DIC
     TOTAL_ERROR_LIST = list()
 
-    driver.set_page_load_timeout(20)
-    driver.set_script_timeout(20)
+    if os.path.exists(os.path.join(config_path, TOTAL_NOCODE_PICKLE)):
+        with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "rb") as f:
+            TOTAL_NOCODE_DIC = pickle.load(f)
 
     if os.path.exists(os.path.join(config_path, TOTAL_NOCODE_ERROR)):
         with open(os.path.join(config_path, TOTAL_NOCODE_ERROR), "rb") as f:
@@ -52,13 +54,19 @@ def analyze_link(config_path, driver):
     for item_index in TOTAL_NOCODE_DIC:
         sys.stdout.flush()
         try:
-            driver.get(item_index)
+            if platform.system() == "Windows":
+                driver.get(item_index)
+            else:
+                r = requests.get(item_index)
         except:
             TOTAL_ERROR_LIST.append(str(item_index))
             with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
-        page_source = str(driver.page_source)
+        if platform.system() == "Windows":
+            page_source = str(driver.page_source)
+        else:
+            page_source = r.content
         #print(page_source)
         print("-" * 150)
         print(item_index)
@@ -80,15 +88,20 @@ def analyze_link(config_path, driver):
                 break
             end_index += 1
         torrent_link = page_source[start_index : end_index]
-
         try:
-            driver.get(torrent_link)
+            if platform.system() == "Windows":
+                driver.get(torrent_link)
+            else:
+                r = requests.get(torrent_link)
         except:
             TOTAL_ERROR_LIST.append(str(item_index))
             with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
-        torrent_link_source = str(driver.page_source)
+        if platform.system() == "Windows":
+            torrent_link_source = str(driver.page_source)
+        else:
+            torrent_link_source = r.content
 
         start_index = torrent_link_source.find("Downloaded")
         if start_index < 0:
@@ -96,7 +109,6 @@ def analyze_link(config_path, driver):
             with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
-
         while True:
             if torrent_link_source[start_index].isdigit():
                 break
@@ -208,6 +220,4 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
 
             if len(TOTAL_NOCODE_DIC) % 30 == 0:
                 shutil.copy(os.path.join(data_path, TOTAL_NOCODE_PICKLE), os.path.join(data_path, TOTAL_NOCODE_PICKLE_BAK))
-
-    analyze_link(data_path ,driver)
 
