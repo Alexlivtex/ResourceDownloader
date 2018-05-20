@@ -31,9 +31,11 @@ def main():
         options.add_argument("--no-sandbox")
         driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
 
-    analyze_link(CL_1024_PATH, driver)
     try:
-        extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
+        #extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
+        if platform.system() == "Linux":
+            driver.close()
+        analyze_link(CL_1024_PATH, driver)
     except:
         driver.close()
     #analyze_link(CL_1024_PATH, driver)

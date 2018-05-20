@@ -52,6 +52,7 @@ def analyze_link(config_path, driver):
 
     loop_counter = 1
     for item_index in TOTAL_NOCODE_DIC:
+        time.sleep(1)
         sys.stdout.flush()
         try:
             if platform.system() == "Windows":
