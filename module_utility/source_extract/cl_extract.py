@@ -39,7 +39,7 @@ section_map = {"NOCODE_ASIA" : 2,
 
 def analyze_link(config_path, driver):
     global TOTAL_NOCODE_DIC
-    TOTAL_ERROR_LIST = []
+    TOTAL_ERROR_LIST = list()
 
     if os.path.exists(os.path.join(config_path, TOTAL_NOCODE_ERROR)):
         with open(os.path.join(config_path, TOTAL_NOCODE_ERROR), "rb") as f:
@@ -51,7 +51,7 @@ def analyze_link(config_path, driver):
         try:
             driver.get(item_index)
         except:
-            TOTAL_ERROR_LIST.append(item_index)
+            TOTAL_ERROR_LIST.append(str(item_index))
             with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
@@ -61,7 +61,7 @@ def analyze_link(config_path, driver):
         print(item_index)
         start_index = page_source.rfind("rmdown.com")
         if start_index < 0:
-            TOTAL_ERROR_LIST.append(item_index)
+            TOTAL_ERROR_LIST.append(str(item_index))
             with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
@@ -81,7 +81,7 @@ def analyze_link(config_path, driver):
         try:
             driver.get(torrent_link)
         except:
-            TOTAL_ERROR_LIST.append(item_index)
+            TOTAL_ERROR_LIST.append(str(item_index))
             with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
@@ -89,7 +89,7 @@ def analyze_link(config_path, driver):
 
         start_index = torrent_link_source.find("Downloaded")
         if start_index < 0:
-            TOTAL_ERROR_LIST.append(item_index)
+            TOTAL_ERROR_LIST.append(str(item_index))
             with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
@@ -126,7 +126,7 @@ def analyze_link(config_path, driver):
 
 def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     global  TOTAL_NOCODE_DIC
-    TOTAL_ERROR_LIST = []
+    TOTAL_ERROR_LIST = list()
     login_url = "http://t66y.com/login.php"
 
     driver.set_page_load_timeout(50)
@@ -169,7 +169,7 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
         soup = bs.BeautifulSoup(driver.page_source, "lxml")
         for sub_item in soup.findAll("h3"):
             if len(sub_item.findAll('a')) == 0:
-                TOTAL_ERROR_LIST.append(sub_item)
+                TOTAL_ERROR_LIST.append(str(sub_item))
                 with open(os.path.join(os.path.join(data_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                     pickle.dump(TOTAL_ERROR_LIST, f)
                 continue
@@ -179,7 +179,7 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
                 full_link = "/".join(login_url.split('/')[:-1]) + '/' + link["href"]
             except:
                 print(link)
-                TOTAL_ERROR_LIST.append(sub_item)
+                TOTAL_ERROR_LIST.append(str(sub_item))
                 with open(os.path.join(os.path.join(data_path, TOTAL_NOCODE_ERROR)), "wb") as f:
                     pickle.dump(TOTAL_ERROR_LIST, f)
                 continue
