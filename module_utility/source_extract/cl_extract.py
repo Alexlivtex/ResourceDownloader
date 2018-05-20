@@ -41,6 +41,9 @@ def analyze_link(config_path, driver):
     global TOTAL_NOCODE_DIC
     TOTAL_ERROR_LIST = list()
 
+    driver.set_page_load_timeout(20)
+    driver.set_script_timeout(20)
+
     if os.path.exists(os.path.join(config_path, TOTAL_NOCODE_ERROR)):
         with open(os.path.join(config_path, TOTAL_NOCODE_ERROR), "rb") as f:
             TOTAL_ERROR_LIST = pickle.load(f)

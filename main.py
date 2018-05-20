@@ -36,7 +36,7 @@ def main():
     except:
         driver.close()
     #analyze_link(CL_1024_PATH, driver)
-
+    driver.close()
 
 
 main()
