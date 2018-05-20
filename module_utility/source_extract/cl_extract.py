@@ -66,7 +66,7 @@ def analyze_link(config_path, driver):
         if platform.system() == "Windows":
             page_source = str(driver.page_source)
         else:
-            page_source = r.content
+            page_source = str(r.content)
         #print(page_source)
         print("-" * 150)
         print(item_index)
@@ -101,7 +101,7 @@ def analyze_link(config_path, driver):
         if platform.system() == "Windows":
             torrent_link_source = str(driver.page_source)
         else:
-            torrent_link_source = r.content
+            torrent_link_source = str(r.content)
 
         start_index = torrent_link_source.find("Downloaded")
         if start_index < 0:
