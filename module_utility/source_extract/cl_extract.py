@@ -175,14 +175,27 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
         with open(os.path.join(data_path, TOTAL_NOCODE_ERROR), "rb") as f:
             TOTAL_ERROR_LIST = pickle.load(f)
 
+    if platform.system() == "Linux":
+        cookies = driver.get_cookies()
+        s = requests.Session()
+        for cookie in cookies:
+            s.cookies.set(cookie["name"], cookie["value"])
+
     for index in range(1, int(total_page_count)):
         time.sleep(1)
         complete_url = url + "/thread0806.php?fid=" + str(section_map["NOCODE_ASIA"]) + "&search=&page=" + str(index)
         try:
-            driver.get(complete_url)
+            if platform.system() == "Windows":
+                driver.get(complete_url)
+            else:
+                r = s.get(complete_url)
         except:
             continue
-        soup = bs.BeautifulSoup(driver.page_source, "lxml")
+        if platform.system() == "Windows":
+            source = driver.page_source
+        else:
+            source = r.content
+        soup = bs.BeautifulSoup(source, "lxml")
         for sub_item in soup.findAll("h3"):
             if len(sub_item.findAll('a')) == 0:
                 TOTAL_ERROR_LIST.append(str(sub_item))
