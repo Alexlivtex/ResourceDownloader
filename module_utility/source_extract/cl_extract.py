@@ -183,6 +183,7 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
 
     for index in range(1, int(total_page_count)):
         time.sleep(1)
+        print("*********************************Current page index is : {}*********************************".format(index))
         complete_url = url + "/thread0806.php?fid=" + str(section_map["NOCODE_ASIA"]) + "&search=&page=" + str(index)
         try:
             if platform.system() == "Windows":
