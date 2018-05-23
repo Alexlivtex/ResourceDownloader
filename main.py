@@ -37,7 +37,7 @@ def main():
         #if platform.system() == "Linux":
         #    driver.close()
         #analyze_link(CL_1024_PATH, driver)
-    ranking(CL_1024_PATH, 100)
+    ranking(CL_1024_PATH, 10)
     #except:
     #    driver.close()
     #analyze_link(CL_1024_PATH, driver)
