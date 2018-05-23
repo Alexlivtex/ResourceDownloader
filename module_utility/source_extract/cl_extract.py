@@ -46,6 +46,8 @@ def ranking(config_path, ranking_count):
 
     sorted_x = sorted(full_dic.items(), key=lambda x : x[1]['DownloadingCount'], reverse=True)
     for item in sorted_x[:ranking_count]:
+        print(item[0])
+        print(item[1]['TorrentLink'])
         print(item[1]['DownloadingCount'])
 
 def analyze_link(config_path, driver):
