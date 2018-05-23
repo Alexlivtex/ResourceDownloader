@@ -45,7 +45,8 @@ def ranking(config_path, ranking_count):
         full_dic = pickle.load(f)
 
     sorted_x = sorted(full_dic.items(), key=lambda x : x[1]['DownloadingCount'], reverse=True)
-    print(sorted_x[:ranking_count])
+    for item in sorted_x[:ranking_count]:
+        print(sorted_x[item]['DownloadingCount'])
 
 def analyze_link(config_path, driver):
     global TOTAL_NOCODE_DIC
