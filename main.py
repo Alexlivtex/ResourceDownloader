@@ -1,6 +1,7 @@
 import json
 import os
 import platform
+import traceback
 from selenium import webdriver
 
 from module_utility.source_extract.cl_extract import extract_source_asis_nocode
@@ -32,15 +33,18 @@ def main():
         options.add_argument("--no-sandbox")
         driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
 
-    #try:
-        #extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
-        #if platform.system() == "Linux":
-        #    driver.close()
-        #analyze_link(CL_1024_PATH, driver)
-    ranking(CL_1024_PATH, 10)
-    #except:
-    #    driver.close()
-    #analyze_link(CL_1024_PATH, driver)
+    try:
+        extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
+        analyze_link(CL_1024_PATH, driver)
+        ranking(CL_1024_PATH, 10)
+    except Exception as e:
+        print("")
+        print("str(Exception):\t", str(Exception))
+        print("str(e):\t\t", str(e))
+        print("repr(e):\t", repr(e))
+        print('e.message:\t', e.message)
+        print('traceback.print_exc():', traceback.print_exc())
+        print('traceback.format_exc():\n%s' % traceback.format_exc())
     driver.close()
 
 

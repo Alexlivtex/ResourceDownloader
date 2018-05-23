@@ -125,15 +125,23 @@ def analyze_link(config_path, driver):
         while True:
             if torrent_link_source[start_index].isdigit():
                 break
+            if torrent_link_source[start_index] == "<":
+                TOTAL_ERROR_LIST.append(str(item_index))
+                with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                    pickle.dump(TOTAL_ERROR_LIST, f)
+                start_index = -1
+                break
             start_index += 1
 
         end_index = start_index
         while True:
+            if end_index == -1:
+                break
             if not torrent_link_source[end_index].isdigit():
                 break
             end_index += 1
 
-        if "hash" not in torrent_link:
+        if "hash" not in torrent_link or start_index == -1:
             download_count = 0
         else:
             download_count = int(torrent_link_source[start_index:end_index].strip())
