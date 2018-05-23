@@ -8,6 +8,7 @@ import shutil
 import threading
 import platform
 import requests
+import operator
 
 TOTAL_NOCODE_PICKLE = "nocode.pickle"
 TOTAL_NOCODE_PICKLE_BAK = "nocode_bak.pickle"
@@ -37,6 +38,14 @@ section_map = {"NOCODE_ASIA" : 2,
                "DAGGLE" : 16,
                "LITERATUAL" : 20
                }
+
+def ranking(config_path, ranking_count):
+    full_dic = {}
+    with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "rb") as f:
+        full_dic = pickle.load(f)
+
+    sorted_x = sorted(full_dic.items(), key=operator.itemgetter(3))
+    print(sorted_x[:ranking_count])
 
 def analyze_link(config_path, driver):
     global TOTAL_NOCODE_DIC
