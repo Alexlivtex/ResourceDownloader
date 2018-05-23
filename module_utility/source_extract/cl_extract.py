@@ -44,7 +44,7 @@ def ranking(config_path, ranking_count):
     with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "rb") as f:
         full_dic = pickle.load(f)
 
-    sorted_x = sorted(full_dic.items(), key=lambda x : x[1][2])
+    sorted_x = sorted(full_dic.items(), key=lambda x : x[1]['DownloadingCount'], reverse=True)
     print(sorted_x[:ranking_count])
 
 def analyze_link(config_path, driver):
