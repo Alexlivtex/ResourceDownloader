@@ -10,11 +10,6 @@ import platform
 import requests
 import operator
 
-TOTAL_NOCODE_PICKLE = "nocode.pickle"
-TOTAL_NOCODE_PICKLE_BAK = "nocode_bak.pickle"
-
-TOTAL_NOCODE_ERROR = "nocode_error.pickle"
-
 TOTAL_NOCODE_DIC = {}
 
 if platform.system() == "Windows":
@@ -23,25 +18,9 @@ else:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.setrecursionlimit(10000000)
 
-section_map = {"NOCODE_ASIA" : 2,
-               "CODE_ASIA" : 15,
-               "EURA" : 4,
-               "COMIC" : 5,
-               "NATION_MADE" : 25,
-               "CH_SUB" : 26,
-               "EXCHANGE" : 27,
-               "HTTP":21,
-               "ONLINE" : 22,
-               "LIBRARY" : 10,
-               "TECH_DISCUSS" : 7,
-               "NEW_GEN" : 8,
-               "DAGGLE" : 16,
-               "LITERATUAL" : 20
-               }
-
-def ranking(config_path, ranking_count):
+def ranking(dataPath, ranking_count):
     full_dic = {}
-    with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "rb") as f:
+    with open(dataPath, "rb") as f:
         full_dic = pickle.load(f)
 
     sorted_x = sorted(full_dic.items(), key=lambda x : x[1]['DownloadingCount'], reverse=True)
@@ -50,16 +29,16 @@ def ranking(config_path, ranking_count):
         print(item[1]['TorrentLink'])
         print(item[1]['DownloadingCount'])
 
-def analyze_link(config_path, driver):
+def analyze_link(data, bakData, errorData, driver):
     global TOTAL_NOCODE_DIC
     TOTAL_ERROR_LIST = list()
 
-    if os.path.exists(os.path.join(config_path, TOTAL_NOCODE_PICKLE)):
-        with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "rb") as f:
+    if os.path.exists(data):
+        with open(data, "rb") as f:
             TOTAL_NOCODE_DIC = pickle.load(f)
 
-    if os.path.exists(os.path.join(config_path, TOTAL_NOCODE_ERROR)):
-        with open(os.path.join(config_path, TOTAL_NOCODE_ERROR), "rb") as f:
+    if os.path.exists(errorData):
+        with open(errorData, "rb") as f:
             TOTAL_ERROR_LIST = pickle.load(f)
 
     loop_counter = 1
@@ -73,7 +52,7 @@ def analyze_link(config_path, driver):
                 r = requests.get(item_index)
         except:
             TOTAL_ERROR_LIST.append(str(item_index))
-            with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+            with open(errorData, "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
         if platform.system() == "Windows":
@@ -86,7 +65,7 @@ def analyze_link(config_path, driver):
         start_index = page_source.rfind("rmdown.com")
         if start_index < 0:
             TOTAL_ERROR_LIST.append(str(item_index))
-            with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+            with open(errorData, "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
         end_index = start_index
@@ -108,7 +87,7 @@ def analyze_link(config_path, driver):
                 r = requests.get(torrent_link)
         except:
             TOTAL_ERROR_LIST.append(str(item_index))
-            with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+            with open(errorData, "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
         if platform.system() == "Windows":
@@ -119,7 +98,7 @@ def analyze_link(config_path, driver):
         start_index = torrent_link_source.find("Downloaded")
         if start_index < 0:
             TOTAL_ERROR_LIST.append(str(item_index))
-            with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+            with open(errorData, "wb") as f:
                 pickle.dump(TOTAL_ERROR_LIST, f)
             continue
         while True:
@@ -127,7 +106,7 @@ def analyze_link(config_path, driver):
                 break
             if torrent_link_source[start_index] == "<":
                 TOTAL_ERROR_LIST.append(str(item_index))
-                with open(os.path.join(os.path.join(config_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                with open(errorData, "wb") as f:
                     pickle.dump(TOTAL_ERROR_LIST, f)
                 start_index = -1
                 break
@@ -152,18 +131,26 @@ def analyze_link(config_path, driver):
         TOTAL_NOCODE_DIC[item_index]["DownloadingCount"] = download_count
 
         if loop_counter % 10 == 0:
-            with open(os.path.join(config_path, TOTAL_NOCODE_PICKLE), "wb") as f:
+            with open(data, "wb") as f:
                 pickle.dump(TOTAL_NOCODE_DIC, f)
 
         if loop_counter % 30 == 0:
-            shutil.copy(os.path.join(config_path, TOTAL_NOCODE_PICKLE), os.path.join(config_path, TOTAL_NOCODE_PICKLE_BAK))
+            shutil.copy(data, bakData)
 
         loop_counter += 1
 
-def extract_source_asis_nocode(driver, url, id, passwd, data_path):
+def extract_source_torrent(driver, paramList):
     global  TOTAL_NOCODE_DIC
     TOTAL_ERROR_LIST = list()
-    login_url = "http://t66y.com/login.php"
+    url = paramList["url"]
+    id = paramList["id"]
+    passwd = paramList["passwd"]
+    data = paramList["data"]
+    errorData = paramList["errorData"]
+    bakData = paramList["bakData"]
+    section = paramList["section"]
+
+    login_url = url + "/login.php"
 
     driver.set_page_load_timeout(50)
     driver.set_script_timeout(50)
@@ -178,27 +165,27 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
     elem_login.click()
     time.sleep(2)
 
-    driver.get(url + "/thread0806.php?fid=" + str(section_map["NOCODE_ASIA"]) + "&search=&page=0")
+    driver.get(url + "/thread0806.php?fid=" + str(section) + "&search=&page=0")
     soup = bs.BeautifulSoup(driver.page_source, "lxml")
     page_total = soup.findAll("input")[0]["onblur"]
     total_page_count = page_total.split("=")[-1].split("/")[-1].split("'")[0]
 
-    if os.path.exists(os.path.join(data_path, TOTAL_NOCODE_PICKLE)):
-        with open(os.path.join(data_path, TOTAL_NOCODE_PICKLE), "rb") as f:
+    if os.path.exists(data):
+        with open(data, "rb") as f:
             TOTAL_NOCODE_DIC = pickle.load(f)
     else:
-        f = open(os.path.join(data_path, TOTAL_NOCODE_PICKLE), "wb")
+        f = open(data, "wb")
         pickle.dump(TOTAL_NOCODE_DIC, f)
         f.close()
 
-    if os.path.exists(os.path.join(data_path, TOTAL_NOCODE_ERROR)):
-        with open(os.path.join(data_path, TOTAL_NOCODE_ERROR), "rb") as f:
+    if os.path.exists(errorData):
+        with open(errorData, "rb") as f:
             TOTAL_ERROR_LIST = pickle.load(f)
             
     for index in range(1, int(total_page_count)):
         time.sleep(1)
         print("*********************************Current page index is : {}*********************************".format(index))
-        complete_url = url + "/thread0806.php?fid=" + str(section_map["NOCODE_ASIA"]) + "&search=&page=" + str(index)
+        complete_url = url + "/thread0806.php?fid=" + str(section) + "&search=&page=" + str(index)
         try:
             driver.get(complete_url)
         except:
@@ -208,7 +195,7 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
         for sub_item in soup.findAll("h3"):
             if len(sub_item.findAll('a')) == 0:
                 TOTAL_ERROR_LIST.append(str(sub_item))
-                with open(os.path.join(os.path.join(data_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                with open(errorData, "wb") as f:
                     pickle.dump(TOTAL_ERROR_LIST, f)
                 continue
             link = sub_item.findAll('a')[0]
@@ -218,7 +205,7 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
             except:
                 print(link)
                 TOTAL_ERROR_LIST.append(str(sub_item))
-                with open(os.path.join(os.path.join(data_path, TOTAL_NOCODE_ERROR)), "wb") as f:
+                with open(errorData, "wb") as f:
                     pickle.dump(TOTAL_ERROR_LIST, f)
                 continue
             #print("-" * 100)
@@ -238,9 +225,9 @@ def extract_source_asis_nocode(driver, url, id, passwd, data_path):
 
             #print(TOTAL_NOCODE_DIC)
             if len(TOTAL_NOCODE_DIC) % 10 == 0:
-                with open(os.path.join(data_path, TOTAL_NOCODE_PICKLE), "wb") as f:
+                with open(data, "wb") as f:
                     pickle.dump(TOTAL_NOCODE_DIC, f)
 
             if len(TOTAL_NOCODE_DIC) % 30 == 0:
-                shutil.copy(os.path.join(data_path, TOTAL_NOCODE_PICKLE), os.path.join(data_path, TOTAL_NOCODE_PICKLE_BAK))
+                shutil.copy(data, bakData)
 
