@@ -4,7 +4,7 @@ import platform
 import traceback
 from selenium import webdriver
 
-from module_utility.source_extract.cl_extract import extract_source_asis_nocode
+from module_utility.source_extract.cl_extract import extract_source_torrent
 from module_utility.source_extract.cl_extract import analyze_link
 from module_utility.source_extract.cl_extract import ranking
 
@@ -15,7 +15,9 @@ CL_1024_PATH = os.path.join("file_config", "cl_1024")
 def main():
     with open(CONFIG_FILE, "r") as f:
         data = json.load(f)
-        url = data["cl1024"][0]["url"]
+        if  data["cl1024"][0]["url"] == "":
+            print("Please input the address:")
+            data["cl1024"][0]["url"] = input()
         if data["cl1024"][0]["id"] == "":
             print("Please input the id:")
             data["cl1024"][0]["id"] = input()
@@ -26,6 +28,12 @@ def main():
     with open(CONFIG_FILE, "w") as f:
         json.dump(data, f, ensure_ascii=False, indent=4, separators=(",", ":"))
 
+    param_list = {}
+    param_list["url"] = data["cl1024"][0]["url"]
+    param_list["id"] = data["cl1024"][0]["id"]
+    param_list["passwd"] = data["cl1024"][0]["password"]
+    print(param_list)
+
     if platform.system() == "Windows":
         driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
     else:
@@ -34,9 +42,13 @@ def main():
         driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
 
     try:
-        extract_source_asis_nocode(driver, url, data["cl1024"][0]["id"], data["cl1024"][0]["password"], CL_1024_PATH)
-        analyze_link(CL_1024_PATH, driver)
-        ranking(CL_1024_PATH, 10)
+        param_list["data"] = os.path.join(CL_1024_PATH, data["cl1024"][0]["NA_CODE_ASIA"]["data_name"])
+        param_list["bakData"] = os.path.join(CL_1024_PATH, data["cl1024"][0]["NA_CODE_ASIA"]["data_name_bak"])
+        param_list["errorData"] = os.path.join(CL_1024_PATH, data["cl1024"][0]["NA_CODE_ASIA"]["error_data"])
+        param_list["section"] = data["cl1024"][0]["NA_CODE_ASIA"]["section_code"]
+        extract_source_torrent(driver, param_list)
+        #analyze_link(CL_1024_PATH, driver)
+        #ranking(CL_1024_PATH, 10)
     except Exception as e:
         print("")
         print("str(Exception):\t", str(Exception))
