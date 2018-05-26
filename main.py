@@ -3,12 +3,24 @@ import os
 import platform
 import traceback
 from selenium import webdriver
+import time
 
 from module_utility.source_extract.cl_extract import extract_source_torrent
 from module_utility.source_extract.cl_extract import analyze_link_torrent
 
 CONFIG_FILE = os.path.join("file_config", "config.json")
 CL_1024_PATH = os.path.join("file_config", "cl_1024")
+
+def cl_login():
+    if platform.system() == "Windows":
+        driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
+    else:
+        options = webdriver.ChromeOptions()
+        options.add_argument("--no-sandbox")
+        driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
+
+    return driver
+
 
 def getConfig(configData, configType):
     param_list = {}
@@ -38,55 +50,71 @@ def main():
     with open(CONFIG_FILE, "w") as f:
         json.dump(data, f, ensure_ascii=False, indent=4, separators=(",", ":"))
 
-    if platform.system() == "Windows":
-        driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
-    else:
-        options = webdriver.ChromeOptions()
-        options.add_argument("--no-sandbox")
-        driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
-
     try:
         #Get nation section
         param_list = getConfig(data, "nation")
         print(param_list)
+        driver = cl_login()
         extract_source_torrent(driver, param_list)
         analyze_link_torrent(driver, param_list)
+        driver.close()
+        time.sleep(100)
+
 
         #Get NA_asia section
         param_list = getConfig(data, "NA_CODE_ASIA")
         print(param_list)
+        driver = cl_login()
         extract_source_torrent(driver, param_list)
         analyze_link_torrent(driver, param_list)
+        driver.close()
+        time.sleep(100)
 
         #Get EURO section
         param_list = getConfig(data, "EURO")
         print(param_list)
+        driver = cl_login()
         extract_source_torrent(driver, param_list)
         analyze_link_torrent(driver, param_list)
+        driver.close()
+        time.sleep(100)
 
         #Get CODE_ASIA section
         param_list = getConfig(data, "CODE_ASIA")
         print(param_list)
+        driver = cl_login()
         extract_source_torrent(driver, param_list)
         analyze_link_torrent(driver, param_list)
+        driver.close()
+        time.sleep(100)
 
         #Get comic section
         param_list = getConfig(data, "comic")
         print(param_list)
+        driver = cl_login()
         extract_source_torrent(driver, param_list)
         analyze_link_torrent(driver, param_list)
+        driver.close()
+        time.sleep(100)
 
         #Get ch_subs section
         param_list = getConfig(data, "ch_subs")
         print(param_list)
+        driver = cl_login()
         extract_source_torrent(driver, param_list)
         analyze_link_torrent(driver, param_list)
+        driver.close()
+        time.sleep(100)
 
         #Get exchange section
         param_list = getConfig(data, "exchange")
         print(param_list)
+        driver = cl_login()
         extract_source_torrent(driver, param_list)
         analyze_link_torrent(driver, param_list)
+        driver.close()
+        time.sleep(100)
+
     except Exception as e:
         print("")
         print("str(Exception):\t", str(Exception))
