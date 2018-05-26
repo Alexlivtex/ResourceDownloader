@@ -46,7 +46,44 @@ def main():
         driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
 
     try:
+        #Get nation section
         param_list = getConfig(data, "nation")
+        print(param_list)
+        extract_source_torrent(driver, param_list)
+        analyze_link_torrent(driver, param_list)
+
+        #Get NA_asia section
+        param_list = getConfig(data, "NA_CODE_ASIA")
+        print(param_list)
+        extract_source_torrent(driver, param_list)
+        analyze_link_torrent(driver, param_list)
+
+        #Get EURO section
+        param_list = getConfig(data, "EURO")
+        print(param_list)
+        extract_source_torrent(driver, param_list)
+        analyze_link_torrent(driver, param_list)
+
+        #Get CODE_ASIA section
+        param_list = getConfig(data, "CODE_ASIA")
+        print(param_list)
+        extract_source_torrent(driver, param_list)
+        analyze_link_torrent(driver, param_list)
+
+        #Get comic section
+        param_list = getConfig(data, "comic")
+        print(param_list)
+        extract_source_torrent(driver, param_list)
+        analyze_link_torrent(driver, param_list)
+
+        #Get ch_subs section
+        param_list = getConfig(data, "ch_subs")
+        print(param_list)
+        extract_source_torrent(driver, param_list)
+        analyze_link_torrent(driver, param_list)
+
+        #Get exchange section
+        param_list = getConfig(data, "exchange")
         print(param_list)
         extract_source_torrent(driver, param_list)
         analyze_link_torrent(driver, param_list)
