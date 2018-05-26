@@ -5,10 +5,11 @@ import sys
 import pickle
 import os
 import shutil
-import threading
 import platform
 import requests
-import operator
+
+import xml.etree.cElementTree as ET
+from time import gmtime, strftime
 
 TOTAL_NOCODE_DIC = {}
 
@@ -18,9 +19,44 @@ else:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.setrecursionlimit(10000000)
 
-def ranking(dataPath, ranking_count):
+def indent(elem, level=0):
+  i = "\n" + level*"  "
+  if len(elem):
+    if not elem.text or not elem.text.strip():
+      elem.text = i + "  "
+    if not elem.tail or not elem.tail.strip():
+      elem.tail = i
+    for elem in elem:
+      indent(elem, level+1)
+    if not elem.tail or not elem.tail.strip():
+      elem.tail = i
+  else:
+    if level and (not elem.tail or not elem.tail.strip()):
+      elem.tail = i
+
+def gen_counting_list(file_name, data, dataCount):
+    downloadingInfo = ET.Element("DownloadInfo")
+    downloadingInfo.set("MaxAmount", str(dataCount))
+    downloadingInfo.set("ModifyTime", strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+
+    for item in data:
+        subnode = ET.SubElement(downloadingInfo, "SubItem")
+        DownloadCount = ET.SubElement(subnode, "Downloaded")
+        Link = ET.SubElement(subnode, "TorrentLink")
+
+        DownloadCount.text = str(item[1]['DownloadingCount'])
+        Link.text = item[1]['TorrentLink']
+
+    indent(downloadingInfo)
+    tree = ET.ElementTree(downloadingInfo)
+    tree.write(file_name, xml_declaration=True, encoding='utf-8', method="xml")
+
+def ranking(paramList):
+    data = paramList["data"]
+    ranking_count = paramList["counting"]
     full_dic = {}
-    with open(dataPath, "rb") as f:
+    count_xml = data.split(".")[0] + ".xml"
+    with open(data, "rb") as f:
         full_dic = pickle.load(f)
 
     sorted_x = sorted(full_dic.items(), key=lambda x : x[1]['DownloadingCount'], reverse=True)
@@ -28,10 +64,15 @@ def ranking(dataPath, ranking_count):
         print(item[0])
         print(item[1]['TorrentLink'])
         print(item[1]['DownloadingCount'])
+    gen_counting_list(count_xml, sorted_x[:ranking_count], ranking_count)
 
-def analyze_link(data, bakData, errorData, driver):
+def analyze_link_torrent(driver, paramList):
     global TOTAL_NOCODE_DIC
     TOTAL_ERROR_LIST = list()
+
+    data = paramList["data"]
+    errorData = paramList["errorData"]
+    bakData = paramList["bakData"]
 
     if os.path.exists(data):
         with open(data, "rb") as f:
@@ -136,6 +177,9 @@ def analyze_link(data, bakData, errorData, driver):
 
         if loop_counter % 30 == 0:
             shutil.copy(data, bakData)
+
+        if loop_counter % 50 == 0:
+            ranking(paramList)
 
         loop_counter += 1
 
