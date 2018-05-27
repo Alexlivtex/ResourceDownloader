@@ -11,8 +11,6 @@ import requests
 import xml.etree.cElementTree as ET
 from time import gmtime, strftime
 
-TOTAL_NOCODE_DIC = {}
-
 if platform.system() == "Windows":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
 else:
@@ -60,30 +58,33 @@ def ranking(paramList):
         full_dic = pickle.load(f)
 
     sorted_x = sorted(full_dic.items(), key=lambda x : x[1]['DownloadingCount'], reverse=True)
-    for item in sorted_x[:ranking_count]:
-        print(item[0])
-        print(item[1]['TorrentLink'])
-        print(item[1]['DownloadingCount'])
-    gen_counting_list(count_xml, sorted_x[:ranking_count], ranking_count)
+    link_list = []
+    sortedData = sorted_x[:ranking_count * 2]
+    for item in sortedData:
+        linkUrl = item[1]['TorrentLink']
+        if linkUrl in link_list:
+            sortedData.remove(item)
+        else:
+            link_list.append(linkUrl)
+    gen_counting_list(count_xml, sortedData[:ranking_count], ranking_count)
 
 def analyze_link_torrent(driver, paramList):
-    global TOTAL_NOCODE_DIC
     TOTAL_ERROR_LIST = list()
-
+    TOTAL_DATA_DIC = dict()
     data = paramList["data"]
     errorData = paramList["errorData"]
     bakData = paramList["bakData"]
 
     if os.path.exists(data):
         with open(data, "rb") as f:
-            TOTAL_NOCODE_DIC = pickle.load(f)
+            TOTAL_DATA_DIC = pickle.load(f)
 
     if os.path.exists(errorData):
         with open(errorData, "rb") as f:
             TOTAL_ERROR_LIST = pickle.load(f)
 
     loop_counter = 1
-    for item_index in TOTAL_NOCODE_DIC:
+    for item_index in TOTAL_DATA_DIC:
         time.sleep(1)
         sys.stdout.flush()
         try:
@@ -168,12 +169,12 @@ def analyze_link_torrent(driver, paramList):
         print("Torrent link : {}".format(torrent_link))
         print("Downloaded count : {}".format(download_count))
         print("*" * 150)
-        TOTAL_NOCODE_DIC[item_index]["TorrentLink"] = torrent_link
-        TOTAL_NOCODE_DIC[item_index]["DownloadingCount"] = download_count
+        TOTAL_DATA_DIC[item_index]["TorrentLink"] = torrent_link
+        TOTAL_DATA_DIC[item_index]["DownloadingCount"] = download_count
 
         if loop_counter % 10 == 0:
             with open(data, "wb") as f:
-                pickle.dump(TOTAL_NOCODE_DIC, f)
+                pickle.dump(TOTAL_DATA_DIC, f)
 
         if loop_counter % 30 == 0:
             shutil.copy(data, bakData)
@@ -184,8 +185,8 @@ def analyze_link_torrent(driver, paramList):
         loop_counter += 1
 
 def extract_source_torrent(driver, paramList):
-    global  TOTAL_NOCODE_DIC
     TOTAL_ERROR_LIST = list()
+    TOTAL_DATA_DIC = dict()
     url = paramList["url"]
     id = paramList["id"]
     passwd = paramList["passwd"]
@@ -216,10 +217,10 @@ def extract_source_torrent(driver, paramList):
 
     if os.path.exists(data):
         with open(data, "rb") as f:
-            TOTAL_NOCODE_DIC = pickle.load(f)
+            TOTAL_DATA_DIC = pickle.load(f)
     else:
         f = open(data, "wb")
-        pickle.dump(TOTAL_NOCODE_DIC, f)
+        pickle.dump(TOTAL_DATA_DIC, f)
         f.close()
 
     if os.path.exists(errorData):
@@ -253,7 +254,7 @@ def extract_source_torrent(driver, paramList):
                     pickle.dump(TOTAL_ERROR_LIST, f)
                 continue
             #print("-" * 100)
-            if full_link in TOTAL_NOCODE_DIC:
+            if full_link in TOTAL_DATA_DIC:
                 print("{} has already exixts".format(full_link))
                 continue
             if "htm_data" not in full_link:
@@ -265,13 +266,13 @@ def extract_source_torrent(driver, paramList):
                 print("Title : {}".format(title))
 
             item = {"Title" : title, "TorrentLink" : "", "DownloadingCount" : 0}
-            TOTAL_NOCODE_DIC[full_link] = item
+            TOTAL_DATA_DIC[full_link] = item
 
             #print(TOTAL_NOCODE_DIC)
-            if len(TOTAL_NOCODE_DIC) % 10 == 0:
+            if len(TOTAL_DATA_DIC) % 10 == 0:
                 with open(data, "wb") as f:
-                    pickle.dump(TOTAL_NOCODE_DIC, f)
+                    pickle.dump(TOTAL_DATA_DIC, f)
 
-            if len(TOTAL_NOCODE_DIC) % 30 == 0:
+            if len(TOTAL_DATA_DIC) % 30 == 0:
                 shutil.copy(data, bakData)
 
