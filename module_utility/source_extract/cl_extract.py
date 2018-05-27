@@ -39,9 +39,13 @@ def gen_counting_list(file_name, data, dataCount):
 
     for item in data:
         subnode = ET.SubElement(downloadingInfo, "SubItem")
+        Title = ET.SubElement(subnode, "Title")
+        MainLink = ET.SubElement(subnode, "Link")
         DownloadCount = ET.SubElement(subnode, "Downloaded")
         Link = ET.SubElement(subnode, "TorrentLink")
 
+        Title.text = str(item[1]['Title'])
+        MainLink.text = str(item[0])
         DownloadCount.text = str(item[1]['DownloadingCount'])
         Link.text = item[1]['TorrentLink']
 
