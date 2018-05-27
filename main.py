@@ -52,13 +52,13 @@ def main():
 
     try:
         #Get nation section
-        #param_list = getConfig(data, "nation")
-        #print(param_list)
-        #driver = cl_login()
-        #extract_source_torrent(driver, param_list)
-        #analyze_link_torrent(driver, param_list)
-        #driver.close()
-        #time.sleep(100)
+        param_list = getConfig(data, "nation")
+        print(param_list)
+        driver = cl_login()
+        extract_source_torrent(driver, param_list)
+        analyze_link_torrent(driver, param_list)
+        driver.close()
+        time.sleep(100)
 
 
         #Get NA_asia section
