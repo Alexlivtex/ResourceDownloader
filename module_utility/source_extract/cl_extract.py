@@ -8,14 +8,21 @@ import shutil
 import platform
 import requests
 
+from ..timeout.timeout import TimeoutError, timeout
 import xml.etree.cElementTree as ET
 from time import gmtime, strftime
+
+MAX_GET_WAIT_TIME = 5 * 60
 
 if platform.system() == "Windows":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
 else:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.setrecursionlimit(10000000)
+
+@timeout(MAX_GET_WAIT_TIME)
+def getWebpage(driver, url):
+    driver.get(url)
 
 def indent(elem, level=0):
   i = "\n" + level*"  "
@@ -236,7 +243,10 @@ def extract_source_torrent(driver, paramList):
         print("*********************************Current page index is : {}*********************************".format(index))
         complete_url = url + "/thread0806.php?fid=" + str(section) + "&search=&page=" + str(index)
         try:
-            driver.get(complete_url)
+            if platform.system() == "Windows":
+                driver.get(complete_url)
+            else:
+                getWebpage(driver, complete_url)
         except:
             continue
         source = driver.page_source
