@@ -192,8 +192,8 @@ def extract_source_torrent(driver, paramList):
     TOTAL_ERROR_LIST = list()
     TOTAL_DATA_DIC = dict()
     url = paramList["url"]
-    id = paramList["id"]
-    passwd = paramList["passwd"]
+    #id = paramList["id"]
+    #passwd = paramList["passwd"]
     data = paramList["data"]
     errorData = paramList["errorData"]
     bakData = paramList["bakData"]
@@ -201,18 +201,18 @@ def extract_source_torrent(driver, paramList):
 
     login_url = url + "/login.php"
 
-    driver.set_page_load_timeout(50)
-    driver.set_script_timeout(50)
-    driver.get(login_url)
+    #driver.set_page_load_timeout(50)
+    #driver.set_script_timeout(50)
+    #driver.get(login_url)
 
-    elem_user_name = driver.find_element_by_name("pwuser")
-    elem_user_pasword = driver.find_element_by_name("pwpwd")
-    elem_user_name.send_keys(id)
-    elem_user_pasword.send_keys(passwd)
-    elem_login = driver.find_element_by_name("submit")
-    time.sleep(3)
-    elem_login.click()
-    time.sleep(2)
+    #elem_user_name = driver.find_element_by_name("pwuser")
+    #elem_user_pasword = driver.find_element_by_name("pwpwd")
+    #elem_user_name.send_keys(id)
+    #elem_user_pasword.send_keys(passwd)
+    #elem_login = driver.find_element_by_name("submit")
+    #time.sleep(3)
+    #elem_login.click()
+    #time.sleep(2)
 
     driver.get(url + "/thread0806.php?fid=" + str(section) + "&search=&page=0")
     soup = bs.BeautifulSoup(driver.page_source, "lxml")
