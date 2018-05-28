@@ -11,13 +11,32 @@ from module_utility.source_extract.cl_extract import analyze_link_torrent
 CONFIG_FILE = os.path.join("file_config", "config.json")
 CL_1024_PATH = os.path.join("file_config", "cl_1024")
 
-def cl_login():
+def cl_login(paramList):
     if platform.system() == "Windows":
         driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
     else:
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
         driver = webdriver.Chrome("/usr/bin/chromedriver",chrome_options=options)
+
+    id = paramList["id"]
+    url = paramList["url"]
+    passwd = paramList["passwd"]
+
+    login_url = url + "/login.php"
+
+    driver.set_page_load_timeout(50)
+    driver.set_script_timeout(50)
+    driver.get(login_url)
+
+    elem_user_name = driver.find_element_by_name("pwuser")
+    elem_user_pasword = driver.find_element_by_name("pwpwd")
+    elem_user_name.send_keys(id)
+    elem_user_pasword.send_keys(passwd)
+    elem_login = driver.find_element_by_name("submit")
+    time.sleep(3)
+    elem_login.click()
+    time.sleep(2)
 
     return driver
 
@@ -50,14 +69,38 @@ def main():
     with open(CONFIG_FILE, "w") as f:
         json.dump(data, f, ensure_ascii=False, indent=4, separators=(",", ":"))
 
+    section_map = ["nation", "NA_CODE_ASIA", "EURO", "CODE_ASIA", "comic", "ch_subs", "exchange"]
+    MAX_SECTOR_SLEEP = 30 * 60
+
     try:
+        for sec_id in section_map:
+            param_list = getConfig(data, sec_id)
+            print(param_list)
+            driver = cl_login(param_list)
+            extract_source_torrent(driver, param_list)
+            driver.close()
+            time.sleep(MAX_SECTOR_SLEEP)
+
+        for sec_id in section_map:
+            param_list = getConfig(data, sec_id)
+            print(param_list)
+            if platform.system() == "Linux":
+                driver = ""
+            else:
+                driver = cl_login(param_list)
+            analyze_link_torrent(driver, param_list)
+
+        '''
         #Get nation section
         param_list = getConfig(data, "nation")
         print(param_list)
         driver = cl_login()
         extract_source_torrent(driver, param_list)
+        if platform.system() == "Linux":
+            driver.close()
         analyze_link_torrent(driver, param_list)
-        driver.close()
+        if platform.system() == "Windows":
+            driver.close()
         time.sleep(100)
 
 
@@ -114,6 +157,7 @@ def main():
         analyze_link_torrent(driver, param_list)
         driver.close()
         time.sleep(100)
+        '''
 
     except Exception as e:
         print("")
