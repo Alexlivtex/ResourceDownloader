@@ -238,7 +238,7 @@ def extract_source_torrent(driver, paramList):
         with open(errorData, "rb") as f:
             TOTAL_ERROR_LIST = pickle.load(f)
             
-    for index in range(1, int(total_page_count)):
+    for index in range(1, int(total_page_count) + 1):
         time.sleep(1)
         print("*********************************Current page index is : {}*********************************".format(index))
         complete_url = url + "/thread0806.php?fid=" + str(section) + "&search=&page=" + str(index)
