@@ -46,3 +46,4 @@ def extract_ph_source(driver, paramList):
         viewCount = "".join(viewCount.split(','))
         sys.stdout.flush()
         print(viewCount)
+        time.sleep(500)
