@@ -7,9 +7,11 @@ import time
 
 from module_utility.source_extract.cl_extract import extract_source_torrent
 from module_utility.source_extract.cl_extract import analyze_link_torrent
+from module_utility.source_extract.ph_extract import extract_ph_source
 
 CONFIG_FILE = os.path.join("file_config", "config.json")
 CL_1024_PATH = os.path.join("file_config", "cl_1024")
+PH_PATH = os.path.join("file_config", "ph")
 
 def cl_login(paramList):
     if platform.system() == "Windows":
@@ -65,6 +67,12 @@ def main():
         if data["cl1024"][0]["password"] == "":
             print("Please input the password: ")
             data["cl1024"][0]["password"] = input()
+        if data["ph"]["url"] == "":
+            print("Please input the url: ")
+            data["ph"]["url"] = input()
+        if data["ph"]["view_keyid"] == "":
+            print("Please input the keyID: ")
+            data["ph"]["view_keyid"] = input()
 
     with open(CONFIG_FILE, "w") as f:
         json.dump(data, f, ensure_ascii=False, indent=4, separators=(",", ":"))
@@ -73,6 +81,17 @@ def main():
     MAX_SECTOR_SLEEP = 30 * 60
 
     try:
+        phParamList = {"url":data["ph"]["url"], "viewKey":data["ph"]["view_keyid"],
+                       "data_name":os.path.join(PH_PATH, data["ph"]["data_name"]),
+                       "data_name_bak":os.path.join(PH_PATH, data["ph"]["data_back_name"]),
+                       "data_name_error": os.path.join(PH_PATH, data["ph"]["data_error_name"])}
+
+        if platform.system() == "Windows":
+            driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
+        else:
+            driver = ""
+        extract_ph_source(driver, phParamList)
+        
         for sec_id in section_map:
             param_list = getConfig(data, sec_id)
             print(param_list)
