@@ -5,6 +5,13 @@
     "parameters":{
         "id":"valore"
     },
+    "ph":{
+        "url":"",
+        "view_keyid":"",
+        "data_name":"ph.pickle",
+        "data_back_name":"ph_bak.pickle",
+        "data_error_name":"ph_error.pickle"
+    },
     "cl1024":[
         {
             "url":"",
