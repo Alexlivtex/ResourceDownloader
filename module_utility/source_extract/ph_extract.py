@@ -51,7 +51,7 @@ def extract_ph_source(driver, paramList):
             url_error_list = pickle.load(f)
 
     while True:
-        for item in url_data_base:
+        for item in list(url_data_base):
             full_url = url + "/view_video.php?viewkey=" + item
             print(full_url)
             extract_link(full_url, data_name, data_name_bak)
