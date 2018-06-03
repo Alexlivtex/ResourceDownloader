@@ -20,6 +20,7 @@ def extract_link(url, url_base, data_name, bak_data_name, data_error_name):
             hash_value = (a['href'].split("viewkey="))[-1][:15]
             try:
                 sub_response = requests.get(url_base + "/view_video.php?viewkey=" + hash_value)
+                print(url_base + "/view_video.php?viewkey=" + hash_value)
                 sub_soup = bs.BeautifulSoup(sub_response.content, "lxml")
             except:
                 url_error_list.append(hash_value)
