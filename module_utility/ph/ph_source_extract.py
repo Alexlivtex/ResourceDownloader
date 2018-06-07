@@ -8,7 +8,7 @@ import shutil
 
 def extract_link(configList):
     data_total = {}
-    error_total = []
+    error_total = list()
 
     url = configList["url"]
     data_name = configList["data_name"]
@@ -45,16 +45,16 @@ def extract_link(configList):
                     sub_soup = bs.BeautifulSoup(sub_response.content, "lxml")
                 except:
                     print("{} has some error".format(hash_value))
-                    if not hash_value in error_total:
-                        error_total.append(str(hash_value))
+                    #if not hash_value in error_total:
+                    #    error_total.append(str(hash_value))
                     continue
                 # viewCount = soup.find_all('span', {'class': 'count'})[0].text
                 if len(sub_soup.find_all('span', {'class': 'count'})) > 0:
                     viewCount = sub_soup.find_all('span', {'class': 'count'})[0].text
                 else:
                     print("{} has some error".format(hash_value))
-                    if not hash_value in error_total:
-                        error_total.append(str(hash_value))
+                    #if not hash_value in error_total:
+                    #    error_total.append(str(hash_value))
                     continue
                 viewCount = "".join(viewCount.split(','))
                 data_total[hash_value] = viewCount
