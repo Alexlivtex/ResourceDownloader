@@ -46,7 +46,7 @@ def extract_link(configList):
                 except:
                     print("{} has some error".format(hash_value))
                     if not hash_value in error_total:
-                        error_total.append(hash_value)
+                        error_total.append(str(hash_value))
                     continue
                 # viewCount = soup.find_all('span', {'class': 'count'})[0].text
                 if len(sub_soup.find_all('span', {'class': 'count'})) > 0:
@@ -54,7 +54,7 @@ def extract_link(configList):
                 else:
                     print("{} has some error".format(hash_value))
                     if not hash_value in error_total:
-                        error_total.append(hash_value)
+                        error_total.append(str(hash_value))
                     continue
                 viewCount = "".join(viewCount.split(','))
                 data_total[hash_value] = viewCount
