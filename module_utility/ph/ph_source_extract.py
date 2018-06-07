@@ -29,7 +29,7 @@ def extract_link(configList):
     while hasNextPage:
         response = requests.get(url + "video?page=" + str(page_index))
         soup = bs.BeautifulSoup(response.content, "lxml")
-        index = len(soup.find_all('li', {"class", "page_next"}))
+        index = len(soup.find_all('img', {"class", "pagination_arrow_right"}))
         if index == 0:
             hasNextPage = False
         else:
@@ -45,14 +45,16 @@ def extract_link(configList):
                     sub_soup = bs.BeautifulSoup(sub_response.content, "lxml")
                 except:
                     print("{} has some error".format(hash_value))
-                    error_total.append(hash_value)
+                    if not hash_value in error_total:
+                        error_total.append(hash_value)
                     continue
                 # viewCount = soup.find_all('span', {'class': 'count'})[0].text
                 if len(sub_soup.find_all('span', {'class': 'count'})) > 0:
                     viewCount = sub_soup.find_all('span', {'class': 'count'})[0].text
                 else:
                     print("{} has some error".format(hash_value))
-                    error_total.append(hash_value)
+                    if not hash_value in error_total:
+                        error_total.append(hash_value)
                     continue
                 viewCount = "".join(viewCount.split(','))
                 data_total[hash_value] = viewCount
