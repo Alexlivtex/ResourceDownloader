@@ -24,10 +24,10 @@ def extract_link(configList):
         with open(data_name_error, "rb") as f:
             error_total = pickle.load(f)
 
-    index = 1
+    page_index = 1
     hasNextPage = True
     while hasNextPage:
-        response = requests.get(url + "video?page=" + str(index))
+        response = requests.get(url + "video?page=" + str(page_index))
         soup = bs.BeautifulSoup(response.content, "lxml")
         index = len(soup.find_all('li', {"class", "page_next"}))
         if index == 0:
@@ -67,5 +67,6 @@ def extract_link(configList):
 
                     shutil.copy(data_name, data_name_bak)
                 print("************************{} has viewed  {} times************************".format(hash_value, viewCount))
-        index += 1
+        print("======Now getting page {}======".format(url + "video?page=" + str(page_index)))
+        page_index += 1
         time.sleep(1)
