@@ -7,8 +7,8 @@ import shutil
 
 
 def extract_link(configList):
-    data_total = dict()
-    error_total = list()
+    data_total = {}
+    error_total = []
 
     url = configList["url"]
     data_name = configList["data_name"]
