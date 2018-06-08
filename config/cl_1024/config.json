@@ -4,6 +4,7 @@
             "url":"",
             "password":"",
             "id":"",
+            "data_path":"",
             "NA_CODE_ASIA":{
                 "data_name":"nocode.pickle",
                 "data_name_bak":"nocode_bak.pickle",
