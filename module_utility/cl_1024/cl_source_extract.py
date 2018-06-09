@@ -351,8 +351,15 @@ def extract_link(param_list):
         driver = cl_login(sub_paramlist)
         extract_source_torrent(driver, sub_paramlist)
         driver.close()
-        time.sleep(MAX_SECTOR_SLEEP)
 
+        if platform.system() == "Linux":
+            driver = ""
+        else:
+            driver = cl_login(sub_paramlist)
+        analyze_link_torrent(driver, sub_paramlist)
+        #time.sleep(MAX_SECTOR_SLEEP)
+
+    '''
     for sec_id in section_map:
         print(param_list)
         sub_paramlist = getConfig(param_list, sec_id)
@@ -361,3 +368,4 @@ def extract_link(param_list):
         else:
             driver = cl_login(sub_paramlist)
         analyze_link_torrent(driver, sub_paramlist)
+    '''
