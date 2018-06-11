@@ -258,9 +258,13 @@ def extract_source_torrent(driver, paramList):
             else:
                 getWebpage(driver, complete_url)
         except:
-            driver.quit()
+            driver.close()
             driver = cl_login(paramList)
-            continue
+            if platform.system() == "Windows":
+                driver.get(complete_url)
+            else:
+                getWebpage(driver, complete_url)
+
         source = driver.page_source
         soup = bs.BeautifulSoup(source, "lxml")
         for sub_item in soup.findAll("h3"):
