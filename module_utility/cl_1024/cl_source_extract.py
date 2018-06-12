@@ -362,7 +362,7 @@ def extract_link(param_list):
             driver = ""
         else:
             driver = cl_login(sub_paramlist)
-        analyze_link_torrent(driver, sub_paramlist)
+        #analyze_link_torrent(driver, sub_paramlist)
         #time.sleep(MAX_SECTOR_SLEEP)
 
     '''
