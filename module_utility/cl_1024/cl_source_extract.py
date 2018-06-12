@@ -9,6 +9,7 @@ import platform
 import requests
 import json
 
+driver = None
 from ..timeout.timeout import TimeoutError, timeout
 import xml.etree.cElementTree as ET
 from time import gmtime, strftime
@@ -204,7 +205,8 @@ def analyze_link_torrent(driver, paramList):
         loop_counter += 1
 
 
-def extract_source_torrent(driver, paramList):
+def extract_source_torrent(paramList):
+    global driver
     TOTAL_ERROR_LIST = list()
     TOTAL_DATA_DIC = dict()
     url = paramList["url"]
@@ -259,7 +261,7 @@ def extract_source_torrent(driver, paramList):
                 getWebpage(driver, complete_url)
         except:
             driver.close()
-            driver = cl_login(paramList)
+            cl_login(paramList)
             if platform.system() == "Windows":
                 driver.get(complete_url)
             else:
@@ -307,6 +309,7 @@ def extract_source_torrent(driver, paramList):
                 shutil.copy(data, bakData)
 
 def cl_login(paramList):
+    global driver
     if platform.system() == "Windows":
         driver = webdriver.Chrome("D:\Chrome_Download\chromedriver_win32\chromedriver.exe")
     else:
@@ -333,8 +336,6 @@ def cl_login(paramList):
     elem_login.click()
     time.sleep(2)
 
-    return driver
-
 def getConfig(param_list, configType):
     item_param_list = {}
     item_param_list["url"] = param_list["url"]
@@ -348,20 +349,21 @@ def getConfig(param_list, configType):
     return item_param_list
 
 def extract_link(param_list):
+    global driver
     section_map = ["nation", "NA_CODE_ASIA", "EURO", "CODE_ASIA", "comic", "ch_subs", "exchange"]
     MAX_SECTOR_SLEEP = 30 * 60
 
     for sec_id in section_map:
         print(param_list)
         sub_paramlist = getConfig(param_list, sec_id)
-        driver = cl_login(sub_paramlist)
-        extract_source_torrent(driver, sub_paramlist)
+        cl_login(sub_paramlist)
+        extract_source_torrent(sub_paramlist)
         driver.close()
 
-        if platform.system() == "Linux":
-            driver = ""
-        else:
-            driver = cl_login(sub_paramlist)
+        #if platform.system() == "Linux":
+        #    driver = ""
+        #else:
+        #    driver = cl_login(sub_paramlist)
         #analyze_link_torrent(driver, sub_paramlist)
         #time.sleep(MAX_SECTOR_SLEEP)
 
