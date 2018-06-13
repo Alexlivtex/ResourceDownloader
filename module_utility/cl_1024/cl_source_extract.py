@@ -359,12 +359,8 @@ def extract_link(param_list):
         cl_login(sub_paramlist)
         extract_source_torrent(sub_paramlist)
         driver.close()
-
-        #if platform.system() == "Linux":
-        #    driver = ""
-        #else:
-        #    driver = cl_login(sub_paramlist)
-        #analyze_link_torrent(driver, sub_paramlist)
+        
+        analyze_link_torrent(driver, sub_paramlist)
         #time.sleep(MAX_SECTOR_SLEEP)
 
     '''
