@@ -354,14 +354,17 @@ def extract_link(param_list):
     MAX_SECTOR_SLEEP = 30 * 60
 
     for sec_id in section_map:
-        print(param_list)
-        sub_paramlist = getConfig(param_list, sec_id)
-        cl_login(sub_paramlist)
-        extract_source_torrent(sub_paramlist)
-        driver.close()
-        
-        analyze_link_torrent(driver, sub_paramlist)
-        #time.sleep(MAX_SECTOR_SLEEP)
+        try:
+            print(param_list)
+            sub_paramlist = getConfig(param_list, sec_id)
+            cl_login(sub_paramlist)
+            extract_source_torrent(sub_paramlist)
+            driver.close()
+
+            analyze_link_torrent(driver, sub_paramlist)
+            # time.sleep(MAX_SECTOR_SLEEP)
+        except:
+            driver.close()
 
     '''
     for sec_id in section_map:
