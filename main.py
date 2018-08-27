@@ -23,6 +23,8 @@ def main():
         with open("config.json", "w") as f:
             json.dump(data, f, ensure_ascii=False, indent=4, separators=(",", ":"))
 
-    dbConnect.connect(host, int(port), user, password)
+    db = dbConnect.connect(host, int(port), user, password)
+    dbConnect.check_database(db)
+    dbConnect.check_table(db)
 
 main()
