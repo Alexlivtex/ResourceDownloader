@@ -33,7 +33,7 @@ def main():
             json.dump(data, f, ensure_ascii=False, indent=4, separators=(",", ":"))
 
     db = dbConnect.connect(host, int(port), user, password)
-    dbConnect.check_database(db)
+    db = dbConnect.check_database(host, int(port), user, password, db)
     dbConnect.check_table(db)
 
 main()
