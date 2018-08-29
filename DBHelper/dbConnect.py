@@ -12,14 +12,28 @@ def connect(host_p, port_p, user_p, password_p):
     else:
         return None
 
-def check_database(db, db_name_p = "ResourceDownloader"):
+def check_database(host, port, user, password, db, db_name_p = "ResourceDownloader"):
     myCursor = db.cursor()
-    ret = myCursor.execute("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{}'".format(db_name_p))
+    db_name = db_name_p
+    ret = myCursor.execute("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{}'".format(db_name))
     if ret == 0:
-        myCursor.execute("CREATE DATABASE {}".format(db_name_p))
+        myCursor.execute("CREATE DATABASE {}".format(db_name))
     else:
-        print("Data base {} has already exists!".format(db_name_p))
-    return db
+        ret = input("Database {} has already exists, do you want to change another one? Y/N : ".format(db_name))
+        if str(ret).lower() == "y":
+            db_name = str(input("Please input the new database name : "))
+            myCursor.execute("CREATE DATABASE {}".format(db_name))
+
+    if db:
+        db.close()
+    
+    
+    new_db = pymysql.connect(host=host, port=port, user=user, password=password, database=db_name)
+    if db:
+        print("Re-connect to database success!")
+        return new_db
+    else:
+        return None
 
 def check_table(db, table_name="accounts_info"):
     myCursor = db.cursor()
