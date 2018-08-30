@@ -2,17 +2,19 @@ import json
 import os
 import getpass
 from DBHelper import dbConnect
+from Utils import webOperation
 
 def main():
     data = {}
-    needModify = input("Need to modify the database information? Y/N : ")
-    if str(needModify).lower() == "y":
-        os.remove("config.json")
-    elif str(needModify).lower() == "n":
-        print("Just keep the current configuation!")
-    else:
-        print("Invalid input, please re-input the config information!")
-        os.remove("config.json")
+    if os.path.exists("config.json"):
+        needModify = input("Need to modify the database information? Y/N : ")
+        if str(needModify).lower() == "y":
+            os.remove("config.json")
+        elif str(needModify).lower() == "n":
+            print("Just keep the current configuation!")
+        else:
+            print("Invalid input, please re-input the config information!")
+            os.remove("config.json")
 
     if os.path.exists("config.json"):
         with open("config.json", "r") as f:
@@ -35,5 +37,7 @@ def main():
     db = dbConnect.connect(host, int(port), user, password)
     db = dbConnect.check_database(host, int(port), user, password, db)
     dbConnect.check_table(db)
+
+    webHandle = webOperation.openBrowser()
 
 main()
