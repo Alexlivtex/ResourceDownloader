@@ -5,6 +5,7 @@ import getpass
 from DBHelper import dbConnect
 from Utils import webOperation
 from Utils import cryptography
+from module.cl_bbs.extract import extract_cl_bbs_data
 
 def main():
     if len(sys.argv) != 2:
@@ -41,8 +42,11 @@ def main():
 
     db = dbConnect.connect(host, int(port), user, password)
     db = dbConnect.check_database(host, int(port), user, password, db, db_name)
-    dbConnect.check_table(db)
 
     webHandle = webOperation.openBrowser()
 
+    extract_cl_bbs_data(db, webHandle)
+
+    if db:
+        db.close()
 main()
