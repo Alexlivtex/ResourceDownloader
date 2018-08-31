@@ -18,15 +18,9 @@ def check_database(host, port, user, password, db, db_name_p = "ResourceDownload
     ret = myCursor.execute("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{}'".format(db_name))
     if ret == 0:
         myCursor.execute("CREATE DATABASE {}".format(db_name))
-    else:
-        ret = input("Database {} has already exists, do you want to change another one? Y/N : ".format(db_name))
-        if str(ret).lower() == "y":
-            db_name = str(input("Please input the new database name : "))
-            myCursor.execute("CREATE DATABASE {}".format(db_name))
 
     if db:
         db.close()
-    
     
     new_db = pymysql.connect(host=host, port=port, user=user, password=password, database=db_name)
     if db:
