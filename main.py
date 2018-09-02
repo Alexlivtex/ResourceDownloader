@@ -6,6 +6,7 @@ from DBHelper import dbConnect
 from Utils import webOperation
 from Utils import cryptography
 from module.cl_bbs.extract import extract_cl_bbs_data
+from module.learningMarkets.extract import learningMarketsExtract
 
 def main():
     if len(sys.argv) != 2:
@@ -45,7 +46,8 @@ def main():
 
     webHandle = webOperation.openBrowser()
 
-    extract_cl_bbs_data(db, webHandle)
+    #extract_cl_bbs_data(db, webHandle)
+    learningMarketsExtract(db, webHandle)
 
     if db:
         db.close()
