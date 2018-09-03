@@ -6,21 +6,28 @@ import time
 def insert_table(db, data):
     myCursor = db.cursor()
     if data["Table"] == "Accounts_info":
+        '''
         InsertSQL = "INSERT INTO {} (Module, Address, UserName, Password) VALUES ('{}', '{}', '{}', '{}' )".format(
                                      data["Table"], str(data["module"]), str(data["address"]), str(data["user_name"]),
                                      str(data["password"]))
+        '''
+        InsertSQL = "INSERT INTO {} (Module, Address, UserName, Password) VALUES (%s, %s, %s, %s )".format(data["Table"])
+        InsertData = (data["module"], data["address"], data["user_name"], data["password"])
     else:
         myCursor.execute("SELECT * FROM {} WHERE Link='{}'".format(data["Table"], data["Link"]))
         if myCursor.fetchone() != None:
             print("Record link {} has already existed!".format(data["Link"]))
             return
-
+        '''
         InsertSQL = "INSERT INTO {} (Title, Description, DataPublished, Link) VALUES ('{}', '{}', '{}', '{}' )".format(
                                      data["Table"], str(data["Title"]), str(data["Description"]), str(data["DataPublished"]),
                                      str(data["Link"]))
+        '''
+        InsertSQL = "INSERT INTO {} (Title, Description, DataPublished, Link) VALUES (%s, %s, %s, %s )".format(data["Table"])
+        InsertData = (data["Title"], data["Description"], data["DataPublished"], data["Link"])
 
     try:
-        myCursor.execute(InsertSQL)
+        myCursor.execute(InsertSQL, InsertData)
         db.commit()
     except Exception as err:
         db.rollback()
@@ -124,7 +131,7 @@ def learningMarketsExtract(db, driver):
             data_insert["DataPublished"] = str(td_index[2].text)
             data_insert["Link"] = str(video_link)
 
-            print(data_insert)
+            #print(data_insert)
 
 
             #try:
@@ -132,7 +139,7 @@ def learningMarketsExtract(db, driver):
             #except:
             #    print("Record has an error {}".format(data_insert))
 
-            #insert_table(db, data_insert)
+            insert_table(db, data_insert)
 
 
 
