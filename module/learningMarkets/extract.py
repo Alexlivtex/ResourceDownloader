@@ -101,7 +101,8 @@ def learningMarketsExtract(db, driver):
     time.sleep(10)
 
     buttont_elem = driver.find_element_by_css_selector(".btn.btn-default.dropdown-toggle")
-    buttont_elem.click()
+    if buttont_elem:
+        buttont_elem.click()
 
     # subitem = driver.find_element_by_css_selector(".dropdown-menu.pull-right")
     li_list = driver.find_elements_by_css_selector(".dropdown-item.dropdown-item-button")
