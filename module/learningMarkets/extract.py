@@ -96,6 +96,10 @@ def learningMarketsExtract(db, driver):
 
     driver.get(data_accounts["address"])
     time.sleep(10)
+    button = driver.find_element_by_class_name("gdpr-agreement")
+    button.click()
+    time.sleep(10)
+
     buttont_elem = driver.find_element_by_css_selector(".btn.btn-default.dropdown-toggle")
     buttont_elem.click()
 
