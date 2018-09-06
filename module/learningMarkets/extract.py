@@ -96,13 +96,15 @@ def learningMarketsExtract(db, driver):
 
     driver.get(data_accounts["address"])
     time.sleep(10)
-    button = driver.find_element_by_class_name("gdpr-agreement")
-    button.click()
+    try:
+        button = driver.find_element_by_class_name("gdpr-agreement")
+        button.click()
+    except:
+        print("No popup window shows")
     time.sleep(10)
 
     buttont_elem = driver.find_element_by_css_selector(".btn.btn-default.dropdown-toggle")
-    if buttont_elem:
-        buttont_elem.click()
+    buttont_elem.click()
 
     # subitem = driver.find_element_by_css_selector(".dropdown-menu.pull-right")
     li_list = driver.find_elements_by_css_selector(".dropdown-item.dropdown-item-button")
