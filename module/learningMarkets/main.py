@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import os
 import time
 
 def insert_table(db, data):
@@ -117,7 +116,7 @@ def learningMarketsExtract(db, driver):
 
     link_list = BeautifulSoup(driver.page_source, "lxml")
 
-    driver.close()
+    #driver.close()
 
     for item in link_list.find_all("tr"):
         td_index = item.find_all('td')

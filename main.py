@@ -1,23 +1,19 @@
 import json
 import os
-import sys
 import getpass
-from DBHelper import dbConnect
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "module")))
+sys.path.append(os.path.abspath(os.getcwd()))
+
+from learningMarkets.main import learningMarketsExtract
+from cl_bbs.main import extract_cl_bbs_data
+
+from Utils import DBHelper
 from Utils import webOperation
 from Utils import cryptography
-from module.cl_bbs.extract import extract_cl_bbs_data
-from module.learningMarkets.extract import learningMarketsExtract
+
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage : python main.py Run    : Just run the programme directly!")
-        print("        python main.py Config : Delete the origin config file and re-config")
-        return None
-
-    if str(sys.argv[1]).lower() == "config":
-        os.remove("config.json")
-        print("Need to re-config the programme")
-
     data = {}
     if os.path.exists("config.json"):
         with open("config.json") as f:
@@ -39,16 +35,21 @@ def main():
     user = data["user"]
     db_name = data["db_name"]
     password = cryptography.decryption_str(str(data["password"]), os.path.join("files", "key.pickle"))
+    print(os.path.abspath(os.path.join(os.getcwd(), "module")))
 
+    db = DBHelper.connect(host, int(port), user, password)
+    if db:
+        print("Connect database success!")
+    else:
+        print("Connect database failed!")
 
-    db = dbConnect.connect(host, int(port), user, password)
-    db = dbConnect.check_database(host, int(port), user, password, db, db_name)
+    db = DBHelper.check_database(host, int(port), user, password, db, db_name)
+    if db:
+        print("check database success!")
+    else:
+        print("check database failed!")
 
     webHandle = webOperation.openBrowser()
-
-    #extract_cl_bbs_data(db, webHandle)
-    learningMarketsExtract(db, webHandle)
-
-    if db:
-        db.close()
+    #learningMarketsExtract(db, webHandle)
+    extract_cl_bbs_data(db, webHandle)
 main()
