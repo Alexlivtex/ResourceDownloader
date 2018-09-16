@@ -49,7 +49,7 @@ def create_table(db, createSQL):
 def insert_table(db, insertSQL, insertData=None):
     try:
         myCursor = db.cursor()
-        print(insertSQL)
+        #print(insertSQL)
         if not insertData:
             myCursor.execute(insertSQL)
         else:

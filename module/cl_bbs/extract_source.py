@@ -19,14 +19,15 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
     page_total = soup.findAll("input")[0]["onblur"]
     total_page_count = page_total.split("=")[-1].split("/")[-1].split("'")[0]
 
-    myCursor = db.cursor()
-
     for index in range(1, int(total_page_count) + 1):
-        time.sleep(random.randint(1, 15))
+        #time.sleep(random.randint(1, 6))
         print("*********************************Current page index is : {}*********************************".format(
             index))
         complete_url = base_url + "/thread0806.php?fid=" + str(section) + "&search=&page=" + str(index)
-        webhandle.get(complete_url)
+        try:
+            webhandle.get(complete_url)
+        except:
+            continue
 
         source = webhandle.page_source
         soup = bs.BeautifulSoup(source, "lxml")
@@ -55,8 +56,10 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
                 print("Record has already existed!")
                 continue
             else:
-                print("Title : {}".format(title))
+                print("Title : ", title)
                 print("link : {}".format(full_link))
+                print("\n")
+                
                 InsertSQL = u"INSERT INTO {} (Title, Link, Section, TorrentLink, DownloadingCount) VALUES (%s, %s, %s, %s, %s )".format(table_name)
                 InsertData = (title, full_link, section, "", 0)
                 DBHelper.insert_table(db, InsertSQL, InsertData)
