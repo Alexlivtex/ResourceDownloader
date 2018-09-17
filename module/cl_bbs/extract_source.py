@@ -20,7 +20,7 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
     total_page_count = page_total.split("=")[-1].split("/")[-1].split("'")[0]
 
     for index in range(1, int(total_page_count) + 1):
-        #time.sleep(random.randint(1, 6))
+        time.sleep(random.randint(1, 10))
         print("*********************************Current page index is : {}*********************************".format(
             index))
         complete_url = base_url + "/thread0806.php?fid=" + str(section) + "&search=&page=" + str(index)
