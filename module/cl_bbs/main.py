@@ -7,7 +7,7 @@ def extract_cl_bbs_data(db, driver):
     AccountTable = "Accounts_info"
     ret = DBHelper.check_table(db, AccountTable)
     print(ret)
-    if ret == 0:
+    if ret == None:
         CREATE_SQL = "CREATE TABLE {} (ID INT AUTO_INCREMENT PRIMARY KEY ," \
                      "Module VARCHAR (100) not NULL ," \
                      "Address VARCHAR (100) NOT NULL , " \
