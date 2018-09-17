@@ -56,7 +56,6 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
                 print("Record has already existed!")
                 continue
             else:
-                print(type(title))
                 print("Title : {}".format(title))
                 print("link : {}".format(full_link))
                 print("\n")
