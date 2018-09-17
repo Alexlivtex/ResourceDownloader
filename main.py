@@ -54,7 +54,8 @@ def main():
         webHandle = webOperation.openBrowser()
         #learningMarketsExtract(db, webHandle)
         extract_cl_bbs_data(db, webHandle)
-    except:
+    except Exception as e:
+        print(e)
         db.close()
         webHandle.close()
 
