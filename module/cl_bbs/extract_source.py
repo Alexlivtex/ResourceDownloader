@@ -62,7 +62,11 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
                 
                 InsertSQL = u"INSERT INTO {} (Title, Link, Section, TorrentLink, DownloadingCount) VALUES (%s, %s, %s, %s, %s )".format(table_name)
                 InsertData = (title, full_link, section, "", 0)
-                DBHelper.insert_table(db, InsertSQL, InsertData)
+                try:
+                    DBHelper.insert_table(db, InsertSQL, InsertData)
+                except Exception as err:
+                    print(err)
+                    continue
 
 
 
