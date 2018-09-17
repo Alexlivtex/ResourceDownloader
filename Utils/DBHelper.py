@@ -24,7 +24,7 @@ def check_database(host, port, user, password, db, db_name_p):
         db.close()
 
     new_db = pymysql.connect(host=host, port=port, user=user, password=password, database=db_name, charset="utf8")
-    db_convert(host, password, user, db_name)
+    #db_convert(host, password, user, db_name)
     if db:
         return new_db
     else:
