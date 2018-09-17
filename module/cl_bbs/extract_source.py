@@ -24,10 +24,10 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
         print("*********************************Current page index is : {}*********************************".format(
             index))
         complete_url = base_url + "/thread0806.php?fid=" + str(section) + "&search=&page=" + str(index)
-        try:
-            webhandle.get(complete_url)
-        except:
-            continue
+        #try:
+        webhandle.get(complete_url)
+        #except:
+        #   continue
 
         source = webhandle.page_source
         soup = bs.BeautifulSoup(source, "lxml")
