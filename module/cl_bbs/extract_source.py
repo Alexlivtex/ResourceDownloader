@@ -30,7 +30,7 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
             continue
 
         source = webhandle.page_source
-        soup = bs.BeautifulSoup(source.decode("utf-8"), "lxml")
+        soup = bs.BeautifulSoup(source, "lxml")
         for sub_item in soup.findAll("h3"):
             if len(sub_item.findAll('a')) == 0:
                 TOTAL_ERROR_LIST.append(str(sub_item))
@@ -56,6 +56,7 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
                 print("Record has already existed!")
                 continue
             else:
+                print(type(title))
                 print("Title : {}".format(title))
                 print("link : {}".format(full_link))
                 print("\n")
