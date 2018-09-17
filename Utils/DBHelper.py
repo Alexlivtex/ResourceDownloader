@@ -32,9 +32,11 @@ def check_database(host, port, user, password, db, db_name_p):
 
 def check_table(db, table_name):
     myCursor = db.cursor()
-    SQL_CHECK = "SELECT * FROM information_schema.tables WHERE table_name = '{}'".format(table_name)
-    ret = myCursor.execute(SQL_CHECK)
-    return ret
+    #SQL_CHECK = "SELECT * FROM information_schema.tables WHERE table_name = '{}'".format(table_name)
+    SQL_CHECK = "SHOW TABLES LIKE '{}'".format(table_name)
+    myCursor.execute(SQL_CHECK)
+    result = myCursor.fetchone()
+    return result
 
 def create_table(db, createSQL):
     try:
