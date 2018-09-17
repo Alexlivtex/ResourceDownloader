@@ -55,7 +55,7 @@ def extract_cl_bbs_data(db, driver):
     cl_video_db = "bbs_video_Data"
 
     ret = DBHelper.check_table(db, cl_video_db)
-    if ret == 0:
+    if ret == None:
         print("Data base not exists!")
 
         CREATE_SQL = "CREATE TABLE {} (ID INT AUTO_INCREMENT PRIMARY KEY ," \
