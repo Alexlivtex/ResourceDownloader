@@ -52,7 +52,7 @@ def main():
 
     try:
         webHandle = webOperation.openBrowser()
-        #learningMarketsExtract(db, webHandle)
+        learningMarketsExtract(db, webHandle)
         extract_cl_bbs_data(db, webHandle)
     except Exception as e:
         print(e)
