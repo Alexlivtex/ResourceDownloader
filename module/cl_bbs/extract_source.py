@@ -5,6 +5,7 @@ import time
 import platform
 import random
 import requests
+from .login import login_website
 from selenium.common.exceptions import TimeoutException
 
 from Utils import DBHelper
@@ -38,8 +39,9 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
             try:
                 webhandle.refresh()
             except:
-                print("Ignore the second exception")
-                #webhandle.execute_script("window.stop();")
+                webhandle.close()
+                webhandle = login_website(db)
+                webhandle.get(complete_url)
 
         try:
             source = webhandle.page_source
