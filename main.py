@@ -2,6 +2,7 @@ import json
 import os
 import getpass
 import sys
+import traceback
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "module")))
 sys.path.append(os.path.abspath(os.getcwd()))
 
@@ -55,7 +56,7 @@ def main():
         #learningMarketsExtract(db, webHandle)
         extract_cl_bbs_data(db, webHandle)
     except Exception as e:
-        print(e)
+        print(traceback.format_exc())
         db.close()
         webHandle.close()
 
