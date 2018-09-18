@@ -41,8 +41,11 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
                 print("Ignore the second exception")
                 webhandle.execute_script('window.stop()')
 
-
-        source = webhandle.page_source
+        try:
+            source = webhandle.page_source
+        except:
+            print("This page can not be parsed!")
+            continue
         #source = r.content
         soup = bs.BeautifulSoup(source, "lxml")
         for sub_item in soup.findAll("h3"):
