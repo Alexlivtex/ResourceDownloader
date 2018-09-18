@@ -39,7 +39,7 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
                 webhandle.refresh()
             except:
                 print("Ignore the second exception")
-                webhandle.execute_script('window.stop()')
+                webhandle.execute_script("window.stop();")
 
         try:
             source = webhandle.page_source
