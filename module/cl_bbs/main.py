@@ -3,7 +3,7 @@ from Utils import DBHelper
 
 from .extract_source import extract_source_torrent
 
-def extract_cl_bbs_data(db, driver):
+def extract_cl_bbs_data(db):
     AccountTable = "Accounts_info"
     ret = DBHelper.check_table(db, AccountTable)
     print(ret)
@@ -29,29 +29,6 @@ def extract_cl_bbs_data(db, driver):
     record = cursor.fetchone()
 
     address = record[2]
-    user_name = record[3]
-    password = record[4]
-
-    login_url = address + "/login.php"
-
-    print(login_url)
-
-    driver.set_page_load_timeout(50)
-    driver.set_script_timeout(50)
-    driver.get(login_url)
-
-    time.sleep(2)
-
-    elem_user_name = driver.find_element_by_name("pwuser")
-    elem_user_pasword = driver.find_element_by_name("pwpwd")
-    elem_user_name.send_keys(user_name)
-    elem_user_pasword.send_keys(password)
-    elem_login = driver.find_element_by_name("submit")
-    time.sleep(3)
-    elem_login.click()
-    time.sleep(10)
-
-    myCursor = db.cursor()
     cl_video_db = "bbs_video_Data"
 
     ret = DBHelper.check_table(db, cl_video_db)
@@ -78,4 +55,4 @@ def extract_cl_bbs_data(db, driver):
 
     video_section = [2, 15, 4, 5, 25, 26, 27]
     for video_section_id in video_section:
-        extract_source_torrent(driver, address, db, cl_video_db, video_section_id)
+        extract_source_torrent(address, db, cl_video_db, video_section_id)

@@ -1,8 +1,5 @@
-import os
 import bs4 as bs
-import pickle
 import time
-import platform
 import random
 import requests
 from .login import login_website
@@ -10,10 +7,11 @@ from selenium.common.exceptions import TimeoutException
 
 from Utils import DBHelper
 
-def extract_source_torrent(webhandle, base_url, db, table_name, section):
+def extract_source_torrent(base_url, db, table_name, section):
     TOTAL_ERROR_LIST = list()
     TOTAL_DATA_DIC = dict()
 
+    webhandle = login_website(db)
 
     login_url = base_url + "/login.php"
 
@@ -41,13 +39,14 @@ def extract_source_torrent(webhandle, base_url, db, table_name, section):
             except:
                 webhandle.close()
                 webhandle = login_website(db)
-                webhandle.get(complete_url)
+                try:
+                    webhandle.get(complete_url)
+                except Exception as e:
+                    print(e)
+                    print("Skip this loop!")
+                    continue
 
-        try:
-            source = webhandle.page_source
-        except:
-            print("This page can not be parsed!")
-            continue
+        source = webhandle.page_source
         #source = r.content
         soup = bs.BeautifulSoup(source, "lxml")
         for sub_item in soup.findAll("h3"):

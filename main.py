@@ -16,7 +16,6 @@ from Utils import cryptography
 
 def main():
     data = {}
-    webHandle = None
     if os.path.exists("config.json"):
         with open("config.json") as f:
             data = json.load(f)
@@ -52,12 +51,10 @@ def main():
         print("check database failed!")
 
     try:
-        webHandle = webOperation.openBrowser()
         #learningMarketsExtract(db, webHandle)
-        extract_cl_bbs_data(db, webHandle)
+        extract_cl_bbs_data(db)
     except Exception as e:
         print(traceback.format_exc())
         db.close()
-        webHandle.close()
 
 main()
