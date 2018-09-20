@@ -86,7 +86,7 @@ def extract_source_torrent(base_url, db, table_name, section):
                     print(err)
                     continue
 
-
+    webhandle.close()
 
 
 
