@@ -32,7 +32,7 @@ def extract_source_torrent(base_url, db, table_name, section):
         try:
             webhandle.get(complete_url)
             #r = s.get(complete_url)
-        except TimeoutException as ex:
+        except Exception as ex:
             print(ex.msg)
             try:
                 webhandle.get(complete_url)
