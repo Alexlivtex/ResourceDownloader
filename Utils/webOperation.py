@@ -10,8 +10,8 @@ def openBrowser():
     if platform.system() == "Windows":
         driver = webdriver.Chrome(os.path.join(driver_path, "Windows", "chromedriver.exe"))
     else:
-        binary = FirefoxBinary(os.path.join(driver_path, "Linux", "geckodriver"))
-        driver = webdriver.Firefox(firefox_binary=binary)
+        #binary = FirefoxBinary(os.path.join(driver_path, "Linux", "geckodriver"))
+        driver = webdriver.Firefox()
         '''
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
