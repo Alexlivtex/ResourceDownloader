@@ -2,6 +2,7 @@ import platform
 import time
 import os
 from selenium import webdriver
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 
 def openBrowser():
@@ -9,8 +10,8 @@ def openBrowser():
     if platform.system() == "Windows":
         driver = webdriver.Chrome(os.path.join(driver_path, "Windows", "chromedriver.exe"))
     else:
-
-        driver = webdriver.Firefox(os.path.join(driver_path, "Linux", "geckodriver"))
+        binary = FirefoxBinary(os.path.join(driver_path, "Linux", "geckodriver"))
+        driver = webdriver.Firefox(firefox_binary=binary)
         '''
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
